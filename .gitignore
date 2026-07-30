@@ -18,6 +18,8 @@ eggs/
 external/
 lib/
 lib64/
+models/
+notebooks/saved_models/
 parts/
 sdist/
 var/
