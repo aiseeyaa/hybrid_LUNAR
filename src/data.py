@@ -9,11 +9,11 @@ sys.path.append("../external/LUNAR")
 import utils
 
 
-@lru_cache(maxsize=None)
+@lru_cache(maxsize=1)
 def load_dataset_cached(dataset: str, seed: int):
     return utils.load_dataset(dataset, seed)
 
-def cleardatasetcache():
+def clear_dataset_cache():
     load_dataset_cached.cache_clear()
 
 
@@ -54,7 +54,7 @@ def make_optuna_subsample(dataset, seed, n_train, n_val, min_minority=50):
 
 
 def make_final_subsample(dataset, seed, n_train, n_val, n_test,
-                          min_minority=30, max_nodes_budget=None, k=1):
+                          min_minority=40, max_nodes_budget=None, k=1):
     train_x, train_y, val_x, val_y, test_x, test_y = load_dataset_cached(dataset, seed)
 
     if max_nodes_budget is not None:

@@ -14,11 +14,6 @@ def ordinal_label(run_index: int) -> str:
     return f"{word}_run"
 
 
-def get_memory_mb() -> float:
-    process = psutil.Process()
-    return process.memory_info().rss / (1024 ** 2)
-
-
 def build_experiment_record(
     dataset_name, dataset_version, split_method, seed, preprocessing_version,
     model_type, fusion_strategy, hyperparameters,
