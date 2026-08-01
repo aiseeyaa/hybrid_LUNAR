@@ -1,0 +1,71 @@
+{
+  "experiment_id": "d8a98cec-f7fc-49ab-8e4a-c3f5bf5e9cf7",
+  "dataset_name": "CICIDS",
+  "dataset_version": "v1",
+  "split_method": "stratified_train_val_test_fixed_seed",
+  "seed": 29,
+  "preprocessing_version": "v1",
+  "model_type": "LUNAR",
+  "fusion_strategy": "none",
+  "hyperparameters": {
+    "k": 91,
+    "samples": "MIXED",
+    "lr": 0.021208175500753584,
+    "wd": 0.06545991924107804,
+    "epsilon": 0.014042267948418431,
+    "proportion": 1,
+    "n_epochs": 75
+  },
+  "threshold": 1.0,
+  "threshold_info": {
+    "candidates": {
+      "f1_max": {
+        "threshold": 1.0,
+        "score_name": "F1",
+        "score_value": 0.6875690947058102,
+        "precision": 0.6745194914743629,
+        "recall": 0.7011335880253022
+      },
+      "f2_max": {
+        "threshold": 4.2143719070590377e-13,
+        "score_name": "F2",
+        "score_value": 0.7447266245274707,
+        "precision": 0.43084901466883985,
+        "recall": 0.9105655414291978
+      },
+      "normal_q_0.99": {
+        "threshold": 1.0,
+        "score_name": "F1",
+        "score_value": 0.6875690947058101,
+        "precision": 0.6745194914743629,
+        "recall": 0.7011335880253022
+      }
+    },
+    "chosen": {
+      "selection_method": "validation_f1_max",
+      "threshold": 1.0,
+      "score_name": "F1",
+      "score_value": 0.6875690947058102,
+      "precision": 0.6745194914743629,
+      "recall": 0.7011335880253022
+    }
+  },
+  "model_path": "C:\\Users\\aisia\\Desktop\\Meisterst\u00fcck\\mgr inz\\ver1004\\hybrid_LUNAR\\models\\CICIDS\\run_1_k_91_seed_29.pth",
+  "AUC_ROC": 0.8465481951036512,
+  "AUC_PR": 0.6225190797260772,
+  "Precision": 0.6940530799475754,
+  "Recall": 0.6998141647739005,
+  "F1": 0.6969217166005223,
+  "ConfusionMatrix": [
+    [
+      68315,
+      7470
+    ],
+    [
+      7269,
+      16946
+    ]
+  ],
+  "runtime_train": 1097.625214099884,
+  "runtime_inference": 90.36890411376953
+}

@@ -1,0 +1,31 @@
+aisia@DESKTOP-J18CUA4 MINGW64 ~/Desktop/Meisterstück/mgr inz/ver1004/hybrid_LUNAR (main)
+$  source "/c/Users/aisia/Desktop/Meisterstück/mgr inz/ver1004/hybrid_LUNAR/venv/Scripts/activate"
+(venv) 
+aisia@DESKTOP-J18CUA4 MINGW64 ~/Desktop/Meisterstück/mgr inz/ver1004/hybrid_LUNAR (main)
+$ cd ./experiments
+(venv) 
+aisia@DESKTOP-J18CUA4 MINGW64 ~/Desktop/Meisterstück/mgr inz/ver1004/hybrid_LUNAR/experiments (main)
+python run_single_experiment.py CICIDS 1 && \
+python run_single_experiment.py UNSW_NB15 1 && \
+python run_single_experiment.py CICIDS 2 && \
+python run_single_experiment.py UNSW_NB15 2 && \
+python run_single_experiment.py CICIDS 3 && \
+python run_single_experiment.py UNSW_NB15 3 && \
+python run_lof.py CICIDS 1 && \
+python run_lof.py UNSW_NB15 1 && \
+python run_lof.py CICIDS 2 && \
+python run_lof.py UNSW_NB15 2 && \
+python run_lof.py CICIDS 3 && \
+python run_lof.py UNSW_NB15 3 && \
+python run_isolation_forest.py CICIDS 1 && \
+python run_isolation_forest.py UNSW_NB15 1 && \
+python run_isolation_forest.py CICIDS 2 && \
+python run_isolation_forest.py UNSW_NB15 2 && \
+python run_isolation_forest.py CICIDS 3 && \
+python run_isolation_forest.py UNSW_NB15 3 && \
+python run_dbscan.py CICIDS 1 && \
+python run_dbscan.py UNSW_NB15 1 && \
+python run_dbscan.py CICIDS 2 && \
+python run_dbscan.py UNSW_NB15 2 && \
+python run_dbscan.py CICIDS 3 && \
+python run_dbscan.py UNSW_NB15 3

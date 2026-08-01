@@ -1,37 +1,35 @@
 import sys
 import gc
 import argparse
+import time
 from pathlib import Path
 
+import joblib
+import numpy as np
 import optuna
-import torch
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "src"
-EXTERNAL_LUNAR_DIR = ROOT / "external" / "LUNAR"
 RESULTS_DIR = ROOT / "results"
 MODELS_DIR = ROOT / "models"
 
 sys.path.append(str(SRC_DIR))
-sys.path.append(str(EXTERNAL_LUNAR_DIR))
 
 from data import make_optuna_subsample, make_final_subsample, clear_dataset_cache
 from optuna_utils import run_study
 from metrics import minmax_scale_scores, evaluate_scores, print_metrics, compare_threshold_strategies
 from results import build_experiment_record, save_record_json
 
-import LUNAR
-import variables as var
-import shutil
+from sklearn.cluster import DBSCAN
+from sklearn.neighbors import NearestNeighbors
 from sklearn.metrics import roc_auc_score
 
 SEED = 29
 N_TRIALS = 200
-SAMPLE_TYPES = ["UNIFORM", "SUBSPACE", "MIXED"]
 DATASET_VERSION = "v1"
 PREPROCESSING_VERSION = "v1"
 SPLIT_METHOD = "stratified_train_val_test_fixed_seed"
-MODEL_TYPE = "LUNAR"
+MODEL_TYPE = "DBSCAN"
 FUSION_STRATEGY = "none"
 
 RUN_CONFIGS = {
@@ -46,119 +44,87 @@ RUN_CONFIGS = {
             notes="run3_large_opt_sample"),
 }
 
+# ---------------------------------------------------------------------------
+# NOTE on DBSCAN as an anomaly detector:
+# DBSCAN has no native predict/score_samples for unseen points - it only
+# assigns cluster labels to the data it was fit on. To score held-out
+# val/test points we fit DBSCAN on the training data, keep the "core samples"
+# it discovers as a reference set of "normal" density regions, and define the
+# anomaly score of any new point as its distance to the nearest core sample
+# (via a NearestNeighbors index). Larger distance -> more anomalous.
+# If DBSCAN finds zero core samples for a given (eps, min_samples) pair, the
+# trial is pruned since no meaningful scoring is possible.
+# ---------------------------------------------------------------------------
+
 
 def cleanup_memory():
     gc.collect()
-    try:
-        torch.cuda.empty_cache()
-    except Exception:
-        pass
 
 
-def get_lunar_internal_model_path(dataset, seed, k):
-    return ROOT / "experiments" / "saved_models" / dataset / str(k) / f"net_{seed}.pth"
+def fit_dbscan_ref(train_x, eps, min_samples, metric):
+    db = DBSCAN(eps=eps, min_samples=min_samples, metric=metric, n_jobs=-1)
+    db.fit(train_x)
+    if len(db.core_sample_indices_) == 0:
+        return None, None
+    core = np.asarray(train_x)[db.core_sample_indices_]
+    nn = NearestNeighbors(n_neighbors=1, metric=metric, n_jobs=-1)
+    nn.fit(core)
+    return db, nn
 
 
-def copy_lunar_model_to_models_dir(dataset, run_index, seed, k):
-    source_path = get_lunar_internal_model_path(dataset, seed, k)
-    if not source_path.exists():
-        raise FileNotFoundError(f"Expected LUNAR checkpoint not found: {source_path}")
-
-    target_dir = MODELS_DIR / dataset
-    target_dir.mkdir(parents=True, exist_ok=True)
-    target_path = target_dir / f"run_{run_index}_k_{k}_seed_{seed}.pth"
-    shutil.copy2(source_path, target_path)
-    print(f"Copied model checkpoint to: {target_path}")
-    return target_path
-
-
-def make_objective(train_x, train_y, val_x, val_y, dataset):
+def make_objective(train_x, val_x, val_y):
     def objective(trial):
         n_pos = int(val_y.sum())
         n_neg = len(val_y) - n_pos
         if n_pos < 5 or n_neg < 5:
             raise optuna.exceptions.TrialPruned()
 
-        k = trial.suggest_int("k", 5, 150, log=True)
-        samples = trial.suggest_categorical("samples", SAMPLE_TYPES)
-        lr = trial.suggest_float("lr", 1e-4, 1e-1, log=True)
-        wd = trial.suggest_float("wd", 1e-4, 1.0, log=True)
-        epsilon = trial.suggest_float("epsilon", 0.01, 0.5)
-        proportion = trial.suggest_int("proportion", 1, 2)
-        n_epochs = trial.suggest_int("n_epochs", 50, 300, step=25)
+        eps = trial.suggest_float("eps", 0.05, 5.0, log=True)
+        min_samples = trial.suggest_int("min_samples", 3, 50, log=True)
+        metric = trial.suggest_categorical("metric", ["euclidean", "manhattan"])
 
-        var.lr, var.wd, var.epsilon = lr, wd, epsilon
-        var.proportion, var.n_epochs = proportion, n_epochs
-
-        try:
-            out = LUNAR.run(
-                train_x, train_y, val_x, val_y, val_x, val_y,
-                dataset, SEED, k, samples, train_new_model=True,
-            )
-            auc = roc_auc_score(val_y, out.numpy())
-        except RuntimeError as e:
-            if "memory" in str(e).lower():
-                cleanup_memory()
-                raise optuna.exceptions.TrialPruned()
-            raise
-        except ValueError:
+        db, nn = fit_dbscan_ref(train_x, eps, min_samples, metric)
+        if nn is None:
             raise optuna.exceptions.TrialPruned()
 
+        try:
+            val_scores = nn.kneighbors(val_x, n_neighbors=1)[0].ravel()
+            auc = roc_auc_score(val_y, val_scores)
+        except ValueError:
+            raise optuna.exceptions.TrialPruned()
         return auc
     return objective
 
 
-def fit_and_score_lunar(params, dataset, train_x, train_y, val_x, val_y, test_x, test_y):
-    var.lr = params["lr"]
-    var.wd = params["wd"]
-    var.epsilon = params["epsilon"]
-    var.proportion = params["proportion"]
-    var.n_epochs = params["n_epochs"]
+def fit_and_score_dbscan(params, train_x, val_x, test_x):
+    start_train = time.time()
+    db, nn = fit_dbscan_ref(train_x, params["eps"], params["min_samples"], params["metric"])
+    runtime_train = time.time() - start_train
 
-    original_device = var.device
-    var.device = torch.device("cpu")
-
-    try:
-        start_train = __import__("time").time()
-        out_val = LUNAR.run(
-            train_x, train_y, val_x, val_y, val_x, val_y,
-            dataset, SEED, params["k"], params["samples"], train_new_model=True,
+    if nn is None:
+        raise RuntimeError(
+            "Final DBSCAN fit produced zero core samples for the chosen "
+            "hyperparameters; cannot score val/test points."
         )
-        runtime_train = __import__("time").time() - start_train
-        scores_val = minmax_scale_scores(out_val.numpy())
 
-        cleanup_memory()
+    scores_val = minmax_scale_scores(nn.kneighbors(val_x, n_neighbors=1)[0].ravel())
 
-        start_inference = __import__("time").time()
-        out_test = LUNAR.run(
-            train_x, train_y, val_x, val_y, test_x, test_y,
-            dataset, SEED, params["k"], params["samples"], train_new_model=False,
-        )
-        runtime_inference = __import__("time").time() - start_inference
-        scores_test = minmax_scale_scores(out_test.numpy())
+    start_inference = time.time()
+    scores_test = minmax_scale_scores(nn.kneighbors(test_x, n_neighbors=1)[0].ravel())
+    runtime_inference = time.time() - start_inference
 
-        return scores_val, scores_test, runtime_train, runtime_inference
-    finally:
-        var.device = original_device
-        cleanup_memory()
+    return nn, scores_val, scores_test, runtime_train, runtime_inference
 
 
 def run_optuna(dataset, run_cfg):
     run_index = run_cfg["run_index"]
-    study_name = f"LUNAR_{dataset}_run{run_index}"
+    study_name = f"DBSCAN_{dataset}_run{run_index}"
 
     train_x, train_y, val_x, val_y = make_optuna_subsample(
         dataset, SEED, run_cfg["n_train_opt"], run_cfg["n_val_opt"]
     )
-    objective = make_objective(train_x, train_y, val_x, val_y, dataset)
-    study = run_study(
-        objective,
-        study_name,
-        SEED,
-        N_TRIALS,
-        results_dir=RESULTS_DIR,
-        save_trials=True,
-    )
+    objective = make_objective(train_x, val_x, val_y)
+    study = run_study(objective, study_name, SEED, N_TRIALS, results_dir=RESULTS_DIR, save_trials=True)
     best_params = dict(study.best_params)
 
     del objective, study, train_x, train_y, val_x, val_y
@@ -170,17 +136,11 @@ def run_optuna(dataset, run_cfg):
 def run_experiment(dataset, run_cfg, best_params):
     run_index = run_cfg["run_index"]
     train_x, train_y, val_x, val_y, test_x, test_y = make_final_subsample(
-        dataset,
-        SEED,
-        run_cfg["n_train_final"],
-        run_cfg["n_val_final"],
-        run_cfg["n_test_final"],
-        max_nodes_budget=50_000_000,
-        k=best_params["k"],
+        dataset, SEED, run_cfg["n_train_final"], run_cfg["n_val_final"], run_cfg["n_test_final"]
     )
 
-    scores_val, scores_test, runtime_train, runtime_inference = fit_and_score_lunar(
-        best_params, dataset, train_x, train_y, val_x, val_y, test_x, test_y
+    nn, scores_val, scores_test, runtime_train, runtime_inference = fit_and_score_dbscan(
+        best_params, train_x, val_x, test_x
     )
 
     threshold_candidates = compare_threshold_strategies(val_y, scores_val, beta=2.0, normal_q=0.99)
@@ -191,9 +151,10 @@ def run_experiment(dataset, run_cfg, best_params):
     print(f"[{dataset} run{run_index}] chosen threshold={best_threshold:.4f} by validation_f1_max")
 
     metrics = evaluate_scores(test_y, scores_test, threshold=best_threshold)
-    print_metrics(f"LUNAR final - {dataset} run{run_index}", metrics)
+    print_metrics(f"DBSCAN final - {dataset} run{run_index}", metrics)
 
     result_bundle = {
+        "model": nn,
         "metrics": metrics,
         "runtime_train": runtime_train,
         "runtime_inference": runtime_inference,
@@ -208,7 +169,10 @@ def run_experiment(dataset, run_cfg, best_params):
 
 def save_results(dataset, run_cfg, best_params, result_bundle):
     run_index = run_cfg["run_index"]
-    copied_model_path = copy_lunar_model_to_models_dir(dataset, run_index, SEED, best_params["k"])
+    model_dir = MODELS_DIR / MODEL_TYPE
+    model_dir.mkdir(parents=True, exist_ok=True)
+    model_path = model_dir / f"{dataset}_run{run_index}_nn.joblib"
+    joblib.dump(result_bundle["model"], model_path)
 
     record = build_experiment_record(
         dataset_name=dataset,
@@ -223,7 +187,7 @@ def save_results(dataset, run_cfg, best_params, result_bundle):
         runtime_train=result_bundle["runtime_train"],
         runtime_inference=result_bundle["runtime_inference"],
         threshold_info=result_bundle["threshold_info"],
-        model_path=copied_model_path,
+        model_path=model_path,
     )
     save_record_json(record, RESULTS_DIR, run_index, MODEL_TYPE, dataset)
     return record

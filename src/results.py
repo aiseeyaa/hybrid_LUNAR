@@ -24,8 +24,28 @@ def build_experiment_record(
     runtime_inference,
     threshold_info=None,
     model_path=None,
+    threshold_variants=None,
+    pr_curve=None,
 ):
-    return {
+    """
+    threshold_variants: optional dict with the three reporting variants
+    requested in the review -- e.g.
+        {
+            "standard": {...evaluate_scores() output at f1_max threshold...},
+            "recall_oriented": {...evaluate_scores() output at f_beta threshold...},
+            "operational": {...evaluate_scores() output at min-recall threshold...},
+        }
+    Each value is expected to be the dict returned by metrics.evaluate_scores.
+    This lets every model_type report the same three operating points on the
+    frozen test set under an identical protocol, instead of a single F1-max
+    number.
+
+    pr_curve: optional list of {threshold, precision, recall, f1} rows from
+    metrics.pr_curve_summary, computed on the calibration split, so the full
+    precision-recall trade-off can be inspected later rather than only the
+    single best point.
+    """
+    record = {
         "experiment_id": str(uuid.uuid4()),
         "dataset_name": dataset_name,
         "dataset_version": dataset_version,
@@ -44,9 +64,18 @@ def build_experiment_record(
         "Recall": float(metrics["Recall"]),
         "F1": float(metrics["F1"]),
         "ConfusionMatrix": metrics["ConfusionMatrix"],
+        "Recall_at_FPR_0.01": metrics.get("Recall_at_FPR_0.01"),
+        "Precision_at_Recall_0.80": metrics.get("Precision_at_Recall_0.80"),
         "runtime_train": float(runtime_train),
         "runtime_inference": float(runtime_inference),
     }
+
+    if threshold_variants is not None:
+        record["threshold_variants"] = threshold_variants
+    if pr_curve is not None:
+        record["pr_curve"] = pr_curve
+
+    return record
 
 
 def save_record_json(record, results_dir, run_index, model_type, dataset_name):

@@ -20,6 +20,7 @@ lib/
 lib64/
 models/
 notebooks/saved_models/
+experiments/saved_models/
 parts/
 sdist/
 var/
