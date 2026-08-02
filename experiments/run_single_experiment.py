@@ -70,7 +70,7 @@ def copy_lunar_model_to_models_dir(dataset, run_index, seed, k):
     if not source_path.exists():
         raise FileNotFoundError(f"Expected LUNAR checkpoint not found: {source_path}")
 
-    target_dir = MODELS_DIR / dataset
+    target_dir = MODELS_DIR / "LUNAR" / dataset
     target_dir.mkdir(parents=True, exist_ok=True)
     target_path = target_dir / f"run_{run_index}_k_{k}_seed_{seed}.pth"
     shutil.copy2(source_path, target_path)

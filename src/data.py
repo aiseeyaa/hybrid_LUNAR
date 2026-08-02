@@ -11,39 +11,15 @@ import utils
 
 @lru_cache(maxsize=1)
 def load_dataset_cached(dataset: str, seed: int):
+    """
+    Wywołuje zmodyfikowaną funkcję load_dataset, która zwraca teraz 8 elementów:
+    train_x, train_y, val_tune_x, val_tune_y, val_calib_x, val_calib_y, test_x, test_y
+    """
     return utils.load_dataset(dataset, seed)
-
-
-@lru_cache(maxsize=1)
-def load_split_with_calibration_cached(dataset: str, seed: int, calib_fraction: float = 0.5):
-    """
-    Splits the original validation set into two DISJOINT parts, once per
-    (dataset, seed):
-      - val_tune   -> used only by Optuna for hyperparameter search
-      - val_calib  -> used only for threshold calibration (never for tuning)
-
-    This avoids reusing (parts of) the same validation rows for both
-    hyperparameter selection and threshold selection, which was the main
-    methodological concern raised in the review. The test set is left
-    completely untouched here and is only ever subsampled (never split)
-    downstream, so it stays frozen for final evaluation.
-
-    The natural class ratio of the original validation set is preserved in
-    both val_tune and val_calib (stratified split, no oversampling).
-    """
-    train_x, train_y, val_x, val_y, test_x, test_y = load_dataset_cached(dataset, seed)
-
-    stratify = val_y if len(np.unique(val_y)) > 1 else None
-    val_tune_x, val_calib_x, val_tune_y, val_calib_y = train_test_split(
-        val_x, val_y, test_size=calib_fraction, stratify=stratify, random_state=seed
-    )
-
-    return train_x, train_y, val_tune_x, val_tune_y, val_calib_x, val_calib_y, test_x, test_y
 
 
 def clear_dataset_cache():
     load_dataset_cached.cache_clear()
-    load_split_with_calibration_cached.cache_clear()
 
 
 def _stratified_subsample(x, y, n_target, seed, min_minority):
@@ -62,16 +38,13 @@ def _stratified_subsample(x, y, n_target, seed, min_minority):
     return x_sub, y_sub
 
 
-def make_optuna_subsample(dataset, seed, n_train, n_val, calib_fraction=0.5, min_minority=50):
+def make_optuna_subsample(dataset, seed, n_train, n_val, min_minority=50):
     """
-    Subsample used ONLY for Optuna hyperparameter tuning. Draws from
-    val_tune (the tuning half of the validation split), never from
-    val_calib, so the calibration data used later for threshold selection
-    is never seen during hyperparameter search.
+    Subsample used ONLY for Optuna hyperparameter tuning. Draws exclusively from
+    val_tune (the tuning half of the validation split), which is now pre-split 
+    on disk. The calibration data is never seen here.
     """
-    train_x, train_y, val_tune_x, val_tune_y, _, _, _, _ = load_split_with_calibration_cached(
-        dataset, seed, calib_fraction
-    )
+    train_x, train_y, val_tune_x, val_tune_y, _, _, _, _ = load_dataset_cached(dataset, seed)
 
     if len(train_x) > n_train:
         stratify = train_y if len(np.unique(train_y)) > 1 else None
@@ -107,18 +80,13 @@ def make_optuna_subsample(dataset, seed, n_train, n_val, calib_fraction=0.5, min
 
 
 def make_final_subsample(dataset, seed, n_train, n_val, n_test,
-                          calib_fraction=0.5, min_minority=40,
-                          max_nodes_budget=None, k=1):
+                          min_minority=40, max_nodes_budget=None, k=1):
     """
     Subsample used for the final model fit + threshold calibration + frozen
-    test evaluation. The "val" returned here is val_calib (the calibration
-    half of the validation split) -- disjoint from the val_tune data used
-    by make_optuna_subsample. Natural class ratio is preserved (no
-    oversampling) in line with the review recommendation.
+    test evaluation. The "val" returned here is val_calib, drawn natively 
+    from the pre-split arrays.
     """
-    train_x, train_y, _, _, val_calib_x, val_calib_y, test_x, test_y = load_split_with_calibration_cached(
-        dataset, seed, calib_fraction
-    )
+    train_x, train_y, _, _, val_calib_x, val_calib_y, test_x, test_y = load_dataset_cached(dataset, seed)
 
     if max_nodes_budget is not None:
         max_safe_nodes = int(max_nodes_budget / max(k, 1))
