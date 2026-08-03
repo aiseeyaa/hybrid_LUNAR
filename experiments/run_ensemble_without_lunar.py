@@ -15,8 +15,8 @@ from data import make_optuna_subsample, make_final_subsample, clear_dataset_cach
 from metrics import evaluate_scores, print_metrics, compare_threshold_strategies
 from results import build_experiment_record, save_record_json
 from ensemble_utils import (
-    tune_if, tune_lof, tune_dbscan, tune_ocsvm,
-    score_if, score_lof, score_dbscan, score_ocsvm,
+    tune_if, tune_lof, tune_ocsvm,
+    score_if, score_lof, score_ocsvm,
     tune_meta_fusion, apply_meta_fusion,
 )
 
@@ -29,14 +29,13 @@ FUSION_STRATEGIES = ["mean", "max", "weighted", "rank_mean", "stacking_lr"]
 DATASET_VERSION = "v1"
 PREPROCESSING_VERSION = "v1"
 SPLIT_METHOD = "stratified_train_val_test_fixed_seed"
-MODEL_TYPE = "Ensemble_without_LUNAR_v2"
+MODEL_TYPE = "Ensemble_without_LUNAR"
 
-BASE_MODELS = ["IF", "LOF", "DBSCAN", "OCSVM"]
-TUNERS = {"IF": tune_if, "LOF": tune_lof, "DBSCAN": tune_dbscan, "OCSVM": tune_ocsvm}
+BASE_MODELS = ["IF", "LOF", "OCSVM"]
+TUNERS = {"IF": tune_if, "LOF": tune_lof, "OCSVM": tune_ocsvm}
 SCORERS = {
     "IF": lambda p, train_x, val_x, test_x: score_if(p, train_x, val_x, test_x, SEED),
     "LOF": lambda p, train_x, val_x, test_x: score_lof(p, train_x, val_x, test_x),
-    "DBSCAN": lambda p, train_x, val_x, test_x: score_dbscan(p, train_x, val_x, test_x),
     "OCSVM": lambda p, train_x, val_x, test_x: score_ocsvm(p, train_x, val_x, test_x),
 }
 

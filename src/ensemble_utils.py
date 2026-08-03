@@ -6,23 +6,11 @@ import optuna
 from sklearn.ensemble import IsolationForest
 from sklearn.neighbors import LocalOutlierFactor, NearestNeighbors
 from sklearn.svm import OneClassSVM
-from sklearn.cluster import DBSCAN
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import roc_auc_score
 
 from optuna_utils import run_study
 from metrics import minmax_scale_scores
-
-
-def fit_dbscan_ref(train_x, eps, min_samples, metric):
-    db = DBSCAN(eps=eps, min_samples=min_samples, metric=metric, n_jobs=-1)
-    db.fit(train_x)
-    if len(db.core_sample_indices_) == 0:
-        return None
-    core = np.asarray(train_x)[db.core_sample_indices_]
-    nn = NearestNeighbors(n_neighbors=1, metric=metric, n_jobs=-1)
-    nn.fit(core)
-    return nn
 
 
 def tune_if(train_x, val_x, val_y, seed, n_trials, results_dir):
@@ -74,20 +62,6 @@ def tune_ocsvm(train_x, val_x, val_y, seed, n_trials, results_dir):
     return run_study(objective, "OCSVM_tmp", seed, n_trials, results_dir=results_dir).best_params
 
 
-def tune_dbscan(train_x, val_x, val_y, seed, n_trials, results_dir):
-    def objective(trial):
-        params = {
-            "eps": trial.suggest_float("eps", 0.05, 5.0, log=True),
-            "min_samples": trial.suggest_int("min_samples", 3, 50, log=True),
-            "metric": trial.suggest_categorical("metric", ["euclidean", "manhattan"]),
-        }
-        nn = fit_dbscan_ref(train_x, **params)
-        if nn is None:
-            raise optuna.exceptions.TrialPruned()
-        return roc_auc_score(val_y, nn.kneighbors(val_x, n_neighbors=1)[0].ravel())
-    return run_study(objective, "DBSCAN_tmp", seed, n_trials, results_dir=results_dir).best_params
-
-
 def score_if(params, train_x, val_x, test_x, seed):
     clf = IsolationForest(**params, random_state=seed, n_jobs=-1)
     t0 = time.time(); clf.fit(train_x); tr = time.time() - t0
@@ -107,15 +81,6 @@ def score_ocsvm(params, train_x, val_x, test_x):
     t0 = time.time(); clf.fit(train_x); tr = time.time() - t0
     t1 = time.time(); val = -clf.decision_function(val_x); test = -clf.decision_function(test_x); inf = time.time() - t1
     return minmax_scale_scores(val), minmax_scale_scores(test), tr, inf
-
-
-def score_dbscan(params, train_x, val_x, test_x):
-    t0 = time.time(); nn = fit_dbscan_ref(train_x, **params); tr = time.time() - t0
-    if nn is None:
-        raise RuntimeError("DBSCAN produced zero core samples")
-    t1 = time.time(); val = nn.kneighbors(val_x, n_neighbors=1)[0].ravel(); test = nn.kneighbors(test_x, n_neighbors=1)[0].ravel(); inf = time.time() - t1
-    return minmax_scale_scores(val), minmax_scale_scores(test), tr, inf
-
 
 def rank_average(arr2d):
     ranks = np.vstack([pd.Series(col).rank(method="average").to_numpy() for col in arr2d.T]).T

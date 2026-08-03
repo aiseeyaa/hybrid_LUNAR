@@ -32,7 +32,7 @@ EPOCH_GRID = [25, 50, 75, 100, 150, 200, 250, 300]
 DATASET_VERSION = "v1"
 PREPROCESSING_VERSION = "v1"
 SPLIT_METHOD = "stratified_train_val_test_fixed_seed"
-MODEL_TYPE = "LUNAR_Epochs_v2"
+MODEL_TYPE = "LUNAR_Epochs"
 
 RUN_CONFIGS = {
     1: dict(run_index=1, n_train_opt=7000, n_val_opt=3000,

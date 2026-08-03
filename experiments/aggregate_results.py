@@ -4,6 +4,8 @@ from pathlib import Path
 
 import pandas as pd
 import plotly.express as px
+import matplotlib.pyplot as plt
+import seaborn as sns
 
 ROOT = Path(__file__).resolve().parent.parent
 RESULTS_DIR = ROOT / "results"
@@ -64,24 +66,70 @@ def build_summary(df, agg_dir):
 
 
 def build_plots(df, agg_dir):
+    # Konfiguracja estetyczna pod prace naukowe (białe tło, ładne fonty, estetyczne palety)
+    sns.set_theme(style="whitegrid")
+    plt.rcParams.update({
+        'font.size': 11,
+        'axes.labelsize': 12,
+        'axes.titlesize': 13,
+        'xtick.labelsize': 10,
+        'ytick.labelsize': 10,
+        'figure.titlesize': 14
+    })
+
     for metric in [m for m in ["AUC_ROC", "AUC_PR", "F1", "runtime_train"] if m in df.columns]:
-        fig = px.box(df, x="model_type", y=metric, color="dataset_name", points="all",
-                     title=f"{metric} by model_type")
-        fig.write_html(agg_dir / f"box_{metric}_by_model.html")
+        plt.figure(figsize=(8, 5))
+        
+        sns.boxplot(
+            data=df, x="model_type", y=metric, hue="dataset_name", 
+            palette="Set2", showfliers=False
+        )
+        # Dodajemy punkty (odpowiednik points="all" w Plotly)
+        sns.stripplot(
+            data=df, x="model_type", y=metric, hue="dataset_name", 
+            dodge=True, jitter=0.2, color="black", alpha=0.5, size=4, legend=False
+        )
+        
+        plt.title(f"{metric} by Model Type")
+        plt.tight_layout()
+        
+        plt.savefig(agg_dir / f"box_{metric}_by_model.png", dpi=300, bbox_inches='tight')
+        
+        plt.savefig(agg_dir / f"box_{metric}_by_model.pdf", bbox_inches='tight')
+        
+        plt.close()
 
     if "threshold_variant" in df.columns:
-        fig = px.box(df, x="threshold_variant", y="Recall", color="model_type", points="all",
-                     title="Recall by threshold variant (standard / recall_oriented / operational)")
-        fig.write_html(agg_dir / "box_recall_by_threshold_variant.html")
+        # Recall
+        plt.figure(figsize=(8, 5))
+        sns.boxplot(data=df, x="threshold_variant", y="Recall", hue="model_type", palette="Set2", showfliers=False)
+        sns.stripplot(data=df, x="threshold_variant", y="Recall", hue="model_type", dodge=True, jitter=0.2, color="black", alpha=0.5, size=4, legend=False)
+        plt.title("Recall by Threshold Variant")
+        plt.tight_layout()
+        plt.savefig(agg_dir / "box_recall_by_threshold_variant.png", dpi=300, bbox_inches='tight')
+        plt.close()
 
-        fig2 = px.box(df, x="threshold_variant", y="Precision", color="model_type", points="all",
-                      title="Precision by threshold variant (standard / recall_oriented / operational)")
-        fig2.write_html(agg_dir / "box_precision_by_threshold_variant.html")
+        # Precision
+        plt.figure(figsize=(8, 5))
+        sns.boxplot(data=df, x="threshold_variant", y="Precision", hue="model_type", palette="Set2", showfliers=False)
+        sns.stripplot(data=df, x="threshold_variant", y="Precision", hue="model_type", dodge=True, jitter=0.2, color="black", alpha=0.5, size=4, legend=False)
+        plt.title("Precision by Threshold Variant")
+        plt.tight_layout()
+        plt.savefig(agg_dir / "box_precision_by_threshold_variant.png", dpi=300, bbox_inches='tight')
+        plt.savefig(agg_dir / "box_precision_by_threshold_variant.pdf", bbox_inches='tight')
+        plt.close()
 
     if "fusion_strategy" in df.columns:
-        fig = px.box(df.dropna(subset=["fusion_strategy"]), x="fusion_strategy", y="F1",
-                     color="dataset_name", points="all", title="F1 by fusion strategy")
-        fig.write_html(agg_dir / "box_f1_by_fusion.html")
+        df_fusion = df.dropna(subset=["fusion_strategy"])
+        if not df_fusion.empty:
+            plt.figure(figsize=(8, 5))
+            sns.boxplot(data=df_fusion, x="fusion_strategy", y="F1", hue="dataset_name", palette="Set2", showfliers=False)
+            sns.stripplot(data=df_fusion, x="fusion_strategy", y="F1", hue="dataset_name", dodge=True, jitter=0.2, color="black", alpha=0.5, size=4, legend=False)
+            plt.title("F1 by Fusion Strategy")
+            plt.tight_layout()
+            plt.savefig(agg_dir / "box_f1_by_fusion.png", dpi=300, bbox_inches='tight')
+            plt.savefig(agg_dir / "box_f1_by_fusion.pdf", bbox_inches='tight')
+            plt.close()
 
 
 def main():

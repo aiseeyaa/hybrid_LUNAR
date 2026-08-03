@@ -1,5 +1,5 @@
 {
-  "experiment_id": "fc75ef81-aa61-4f9c-b717-9899ab4c6b94",
+  "experiment_id": "cf535cd0-3df0-44ae-8d39-e4c208e9daae",
   "dataset_name": "CICIDS",
   "dataset_version": "v1",
   "split_method": "stratified_train_val_test_fixed_seed",
@@ -9,70 +9,70 @@
   "fusion_strategy": "none",
   "hyperparameters": {
     "kernel": "rbf",
-    "nu": 0.16670738796008777,
-    "gamma": "scale"
+    "nu": 0.010180252594543172,
+    "gamma": "auto"
   },
-  "threshold": 0.29068812401085864,
+  "threshold": 0.043541899057050144,
   "threshold_info": {
     "candidates": {
       "f1_max": {
-        "threshold": 0.29068812401085864,
+        "threshold": 0.043541899057050144,
         "score_name": "F1",
-        "score_value": 0.5688404344863522,
-        "precision": 0.7900244934313071,
-        "recall": 0.4444166092565917
+        "score_value": 0.5481985285946078,
+        "precision": 0.4251094487917543,
+        "recall": 0.7716180703291202
       },
       "f2_max": {
-        "threshold": 0.05752206314551831,
+        "threshold": 0.035857636018812686,
         "score_name": "F2",
-        "score_value": 0.7077871351268958,
-        "precision": 0.3615328467153285,
-        "recall": 0.930606876683159
+        "score_value": 0.7088285229202037,
+        "precision": 0.36984095027179387,
+        "recall": 0.9195344762858215
       },
       "normal_q_0.99": {
-        "threshold": 0.5494739869320913,
+        "threshold": 0.07296709174352548,
         "score_name": "F1",
-        "score_value": 0.48388878659547047,
-        "precision": 0.9129755080771235,
-        "recall": 0.3291789315463143
+        "score_value": 0.46398285341533874,
+        "precision": 0.9085766423357664,
+        "recall": 0.31153798022775625
       },
       "operational": {
-        "threshold": 0.06385207240502283,
+        "threshold": 0.03697244065140212,
         "score_name": "Precision@MinRecall",
-        "score_value": 0.37408892128279886,
-        "precision": 0.37408892128279886,
-        "recall": 0.900043840420868,
+        "score_value": 0.37273473997638484,
+        "precision": 0.37273473997638484,
+        "recall": 0.9085846577399574,
         "min_recall_target": 0.9,
         "recall_floor_met": true
       }
     },
     "chosen": {
       "selection_method": "validation_f1_max",
-      "threshold": 0.29068812401085864,
+      "threshold": 0.043541899057050144,
       "score_name": "F1",
-      "score_value": 0.5688404344863522,
-      "precision": 0.7900244934313071,
-      "recall": 0.4444166092565917
+      "score_value": 0.5481985285946078,
+      "precision": 0.4251094487917543,
+      "recall": 0.7716180703291202
     }
   },
   "model_path": "C:\\Users\\aisia\\Desktop\\Meisterst\u00fcck\\mgr inz\\ver1004\\hybrid_LUNAR\\models\\OneClassSVM\\CICIDS_run1.joblib",
-  "AUC_ROC": 0.7546343235931124,
-  "AUC_PR": 0.611478201152355,
-  "Precision": 0.7933116932135578,
-  "Recall": 0.4339871980177576,
-  "F1": 0.5610485291762319,
+  "AUC_ROC": 0.7676179378258132,
+  "AUC_PR": 0.6215261764491213,
+  "Precision": 0.24329076531996344,
+  "Recall": 0.999958703283089,
+  "F1": 0.39136267395063923,
   "ConfusionMatrix": [
     [
-      73047,
-      2738
+      472,
+      75313
     ],
     [
-      13706,
-      10509
+      1,
+      24214
     ]
   ],
-  "Recall_at_FPR_0.01": 0.32062771009704727,
-  "Precision_at_Recall_0.80": 0.38486312399355876,
-  "runtime_train": 635.9297337532043,
-  "runtime_inference": 144.62215662002563
+  "Recall_at_FPR_0.01": 0.30472847408631015,
+  "Precision_at_Recall_0.80": 0.3729823310759204,
+  "runtime_train": 384.5918679237366,
+  "runtime_inference": 9.069622039794922
 }

@@ -1,5 +1,5 @@
 {
-  "experiment_id": "467a7822-c9eb-4d03-9a92-fba00cc75806",
+  "experiment_id": "8739bfc3-e0b2-46a5-bbbe-cc2dc6554f84",
   "dataset_name": "UNSW_NB15",
   "dataset_version": "v1",
   "split_method": "stratified_train_val_test_fixed_seed",
@@ -9,72 +9,72 @@
   "fusion_strategy": "none",
   "hyperparameters": {
     "n_estimators": 200,
-    "max_samples": 0.677892227285075,
-    "max_features": 0.7855379265802838,
-    "contamination": 0.2862998868176181,
+    "max_samples": 0.9957985193847085,
+    "max_features": 0.6228493129767585,
+    "contamination": 0.12165068554909408,
     "bootstrap": false
   },
-  "threshold": 0.12951943333582205,
+  "threshold": 0.14398320036616774,
   "threshold_info": {
     "candidates": {
       "f1_max": {
-        "threshold": 0.12951943333582205,
+        "threshold": 0.14398320036616774,
         "score_name": "F1",
-        "score_value": 0.8597437325905293,
-        "precision": 0.8606259341051552,
-        "recall": 0.8588633378597983
+        "score_value": 0.8231436274867011,
+        "precision": 0.8230836490819003,
+        "recall": 0.8232036146334354
       },
       "f2_max": {
-        "threshold": 0.028303966579945702,
+        "threshold": 0.03375184547567462,
         "score_name": "F2",
-        "score_value": 0.9196208188803333,
-        "precision": 0.6986139230649432,
-        "recall": 0.9985975378998686
+        "score_value": 0.8749744009830023,
+        "precision": 0.5882960413080895,
+        "recall": 0.9963562162950007
       },
       "normal_q_0.99": {
-        "threshold": 0.45006402423394487,
+        "threshold": 0.4626161227188566,
         "score_name": "F1",
-        "score_value": 0.5361486815218449,
-        "precision": 0.9873962128905084,
-        "recall": 0.36797934151065204
+        "score_value": 0.5492869127516778,
+        "precision": 0.9790654205607476,
+        "recall": 0.38172278093572365
       },
       "operational": {
-        "threshold": 0.06257023608020174,
+        "threshold": 0.06520767962293426,
         "score_name": "Precision@MinRecall",
-        "score_value": 0.7524194148738182,
-        "precision": 0.7524194148738182,
-        "recall": 0.9000022261303177,
+        "score_value": 0.6383462532299742,
+        "precision": 0.6383462532299742,
+        "recall": 0.9001603264830199,
         "min_recall_target": 0.9,
         "recall_floor_met": true
       }
     },
     "chosen": {
       "selection_method": "validation_f1_max",
-      "threshold": 0.12951943333582205,
+      "threshold": 0.14398320036616774,
       "score_name": "F1",
-      "score_value": 0.8597437325905293,
-      "precision": 0.8606259341051552,
-      "recall": 0.8588633378597983
+      "score_value": 0.8231436274867011,
+      "precision": 0.8230836490819003,
+      "recall": 0.8232036146334354
     }
   },
   "model_path": "C:\\Users\\aisia\\Desktop\\Meisterst\u00fcck\\mgr inz\\ver1004\\hybrid_LUNAR\\models\\IsolationForest\\UNSW_NB15_run1.joblib",
-  "AUC_ROC": 0.8380381664643555,
-  "AUC_PR": 0.8811308476060216,
-  "Precision": 0.732631539159359,
-  "Recall": 0.8551354451601517,
-  "F1": 0.7891576075892676,
+  "AUC_ROC": 0.8422828674213789,
+  "AUC_PR": 0.8861452016593088,
+  "Precision": 0.7747399953589436,
+  "Recall": 0.8101341215918115,
+  "F1": 0.7920418396506174,
   "ConfusionMatrix": [
     [
-      22853,
-      14147
+      26322,
+      10678
     ],
     [
-      6567,
-      38765
+      8607,
+      36725
     ]
   ],
-  "Recall_at_FPR_0.01": 0.2597944057178152,
-  "Precision_at_Recall_0.80": 0.7829447322970639,
-  "runtime_train": 3.5419540405273438,
-  "runtime_inference": 2.2213525772094727
+  "Recall_at_FPR_0.01": 0.3117665225447807,
+  "Precision_at_Recall_0.80": 0.7806190537689957,
+  "runtime_train": 4.413946628570557,
+  "runtime_inference": 1.920250654220581
 }

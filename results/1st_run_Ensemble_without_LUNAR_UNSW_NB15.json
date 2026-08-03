@@ -1,0 +1,103 @@
+{
+  "experiment_id": "9e9b28c2-c315-49c4-88af-dfd6ce98127d",
+  "dataset_name": "UNSW_NB15",
+  "dataset_version": "v1",
+  "split_method": "stratified_train_val_test_fixed_seed",
+  "seed": 29,
+  "preprocessing_version": "v1",
+  "model_type": "Ensemble_without_LUNAR",
+  "fusion_strategy": "rank_mean",
+  "hyperparameters": {
+    "base_models": [
+      "IF",
+      "LOF",
+      "OCSVM"
+    ],
+    "best_params": {
+      "IF": {
+        "n_estimators": 200,
+        "max_samples": 0.9957985193847085,
+        "max_features": 0.6228493129767585,
+        "contamination": 0.12165068554909408,
+        "bootstrap": false
+      },
+      "LOF": {
+        "metric": "manhattan",
+        "n_neighbors": 17,
+        "leaf_size": 20,
+        "contamination": 0.09716092986497221
+      },
+      "OCSVM": {
+        "kernel": "rbf",
+        "nu": 0.26150896733142687,
+        "gamma": "scale"
+      }
+    },
+    "meta": {
+      "fusion_strategy": "rank_mean"
+    }
+  },
+  "threshold": 0.4331328213115634,
+  "threshold_info": {
+    "candidates": {
+      "f1_max": {
+        "threshold": 0.4331328213115634,
+        "score_name": "F1",
+        "score_value": 0.8383179671688779,
+        "precision": 0.8629629629629629,
+        "recall": 0.8150415391342369
+      },
+      "f2_max": {
+        "threshold": 0.1557011654761265,
+        "score_name": "F2",
+        "score_value": 0.876279334229298,
+        "precision": 0.6028627311522048,
+        "recall": 0.9883398921440023
+      },
+      "normal_q_0.99": {
+        "threshold": 0.6927555185563139,
+        "score_name": "F1",
+        "score_value": 0.7529072387992428,
+        "precision": 0.9867674858223062,
+        "recall": 0.6086576300830783
+      },
+      "operational": {
+        "threshold": 0.31114721521026906,
+        "score_name": "Precision@MinRecall",
+        "score_value": 0.7087111213129806,
+        "precision": 0.7087111213129806,
+        "recall": 0.90001457513482,
+        "min_recall_target": 0.9,
+        "recall_floor_met": true
+      }
+    },
+    "chosen": {
+      "selection_method": "validation_f1_max",
+      "threshold": 0.4331328213115634,
+      "score_name": "F1",
+      "score_value": 0.8383179671688779,
+      "precision": 0.8629629629629629,
+      "recall": 0.8150415391342369
+    }
+  },
+  "model_path": null,
+  "AUC_ROC": 0.8749064997340938,
+  "AUC_PR": 0.9109787315166408,
+  "Precision": 0.8300380317955259,
+  "Recall": 0.7751257389923233,
+  "F1": 0.8016426167797867,
+  "ConfusionMatrix": [
+    [
+      29805,
+      7195
+    ],
+    [
+      10194,
+      35138
+    ]
+  ],
+  "Recall_at_FPR_0.01": 0.4282625959587047,
+  "Precision_at_Recall_0.80": 0.814812323422575,
+  "runtime_train": 167.67027473449707,
+  "runtime_inference": 186.35094952583313
+}

@@ -38,7 +38,7 @@ def _stratified_subsample(x, y, n_target, seed, min_minority):
     return x_sub, y_sub
 
 
-def make_optuna_subsample(dataset, seed, n_train, n_val, min_minority=50):
+def make_optuna_subsample(dataset, seed, n_train, n_val, min_minority=70):
     """
     Subsample used ONLY for Optuna hyperparameter tuning. Draws exclusively from
     val_tune (the tuning half of the validation split), which is now pre-split 

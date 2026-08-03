@@ -23,8 +23,8 @@ from optuna_utils import run_study
 from metrics import minmax_scale_scores, evaluate_scores, print_metrics, compare_threshold_strategies
 from results import build_experiment_record, save_record_json
 from ensemble_utils import (
-    tune_if, tune_lof, tune_dbscan, tune_ocsvm,
-    score_if, score_lof, score_dbscan, score_ocsvm,
+    tune_if, tune_lof, tune_ocsvm,
+    score_if, score_lof, score_ocsvm,
     tune_meta_fusion, apply_meta_fusion,
 )
 
@@ -40,8 +40,8 @@ SAMPLE_TYPES = ["UNIFORM", "SUBSPACE", "MIXED"]
 DATASET_VERSION = "v1"
 PREPROCESSING_VERSION = "v1"
 SPLIT_METHOD = "stratified_train_val_test_fixed_seed"
-MODEL_TYPE = "Ensemble_with_LUNAR_v2"
-BASE_MODELS = ["LUNAR", "IF", "LOF", "DBSCAN", "OCSVM"]
+MODEL_TYPE = "Ensemble_with_LUNAR"
+BASE_MODELS = ["LUNAR", "IF", "LOF", "OCSVM"]
 
 RUN_CONFIGS = {
     1: dict(run_index=1, n_train_opt=7000, n_val_opt=3000,
@@ -158,7 +158,7 @@ def run_optuna(dataset, run_cfg):
     best_params = {"LUNAR": tune_lunar(opt_train_x, opt_train_y, opt_val_x, opt_val_y, dataset, SEED, N_TRIALS, RESULTS_DIR)}
     best_params.update({
         m: tuner(opt_train_x, opt_val_x, opt_val_y, SEED, N_TRIALS, RESULTS_DIR)
-        for m, tuner in [("IF", tune_if), ("LOF", tune_lof), ("DBSCAN", tune_dbscan), ("OCSVM", tune_ocsvm)]
+        for m, tuner in [("IF", tune_if), ("LOF", tune_lof), ("OCSVM", tune_ocsvm)]
     })
 
     del opt_train_x, opt_train_y, opt_val_x, opt_val_y
@@ -183,8 +183,6 @@ def run_experiment(dataset, run_cfg, best_params):
             v, t, tr, inf = score_if(best_params[model_name], train_x, val_x, test_x, SEED)
         elif model_name == "LOF":
             v, t, tr, inf = score_lof(best_params[model_name], train_x, val_x, test_x)
-        elif model_name == "DBSCAN":
-            v, t, tr, inf = score_dbscan(best_params[model_name], train_x, val_x, test_x)
         else:
             v, t, tr, inf = score_ocsvm(best_params[model_name], train_x, val_x, test_x)
         val_cols.append(v); test_cols.append(t)
