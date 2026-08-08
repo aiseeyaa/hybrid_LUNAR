@@ -1,74 +1,65 @@
+"""
+CO TU ROBIMY (Eksperyment 2 z drabiny ablacyjnej, BEZ WLASNEGO TUNINGU):
+Grupa kontrolna: laczymy w jeden ensemble WYLACZNIE klasyczne detektory
+(IsolationForest, LOF, OneClassSVM, DBSCAN) - BEZ LUNAR-a - przy uzyciu 5
+strategii fuzji score-level.
+
+ZMIANA: ten skrypt NIE TUNUJE JUZ klasycznych modeli od nowa. Wczytuje ich
+hiperparametry z juz zapisanych wynikow solo (run_isolation_forest.py,
+run_lof.py, run_ocsvm.py, run_dbscan.py) przez baseline_selection.py.
+Jedyne "nowe" tunowanie w tym skrypcie to dobor strategii fuzji
+(tune_meta_fusion) - to jest jedyny nowy element, ktorego nie da sie
+wziac z zadnego wczesniejszego eksperymentu.
+
+WYMAGA wczesniej uruchomionych: run_isolation_forest.py, run_lof.py,
+run_ocsvm.py, run_dbscan.py dla tego samego (dataset, run_index).
+
+Nie modyfikuje LUNAR.py, utils.py ani variables.py.
+"""
+
 import sys
 import gc
 import argparse
 from pathlib import Path
 
 import numpy as np
+import optuna
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "src"
 RESULTS_DIR = ROOT / "results"
+MODELS_DIR = ROOT / "models"
 
 sys.path.append(str(SRC_DIR))
 
-from data import make_optuna_subsample, make_final_subsample, clear_dataset_cache
-from metrics import evaluate_scores, print_metrics, compare_threshold_strategies
+from data import make_final_subsample, clear_dataset_cache
+from metrics import print_metrics
 from results import build_experiment_record, save_record_json
-from ensemble_utils import (
-    tune_if, tune_lof, tune_ocsvm,
-    score_if, score_lof, score_ocsvm,
-    tune_meta_fusion, apply_meta_fusion,
-)
-
-import optuna
+from threshold_reporting import calibrate_and_evaluate
+from baseline_selection import load_all_baseline_params, BASELINE_REGISTRY
+from ensemble_utils import tune_meta_fusion, apply_meta_fusion
 
 SEED = 29
-N_TRIALS = 200
-META_TRIALS = 60
+META_TRIALS = 80
 FUSION_STRATEGIES = ["mean", "max", "weighted", "rank_mean", "stacking_lr"]
 DATASET_VERSION = "v1"
 PREPROCESSING_VERSION = "v1"
-SPLIT_METHOD = "stratified_train_val_test_fixed_seed"
+SPLIT_METHOD = "stratified_train_val_calib_test_fixed_seed"
 MODEL_TYPE = "Ensemble_without_LUNAR"
 
-BASE_MODELS = ["IF", "LOF", "OCSVM"]
-TUNERS = {"IF": tune_if, "LOF": tune_lof, "OCSVM": tune_ocsvm}
-SCORERS = {
-    "IF": lambda p, train_x, val_x, test_x: score_if(p, train_x, val_x, test_x, SEED),
-    "LOF": lambda p, train_x, val_x, test_x: score_lof(p, train_x, val_x, test_x),
-    "OCSVM": lambda p, train_x, val_x, test_x: score_ocsvm(p, train_x, val_x, test_x),
-}
+MIN_RECALL_TARGET = 0.90
+FBETA = 2.0
+NORMAL_Q = 0.99
 
 RUN_CONFIGS = {
-    1: dict(run_index=1, n_train_opt=7000, n_val_opt=3000,
-            n_train_final=154000, n_val_final=66000, n_test_final=100000,
-            notes="run1_small_opt_sample"),
-    2: dict(run_index=2, n_train_opt=21000, n_val_opt=9000,
-            n_train_final=154000, n_val_final=66000, n_test_final=100000,
-            notes="run2_medium_opt_sample"),
-    3: dict(run_index=3, n_train_opt=35000, n_val_opt=15000,
-            n_train_final=154000, n_val_final=66000, n_test_final=100000,
-            notes="run3_large_opt_sample"),
+    1: dict(run_index=1, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run1"),
+    2: dict(run_index=2, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run2"),
+    3: dict(run_index=3, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run3"),
 }
 
 
 def cleanup_memory():
     gc.collect()
-
-
-def run_optuna(dataset, run_cfg):
-    opt_train_x, opt_train_y, opt_val_x, opt_val_y = make_optuna_subsample(
-        dataset, SEED, run_cfg["n_train_opt"], run_cfg["n_val_opt"]
-    )
-    best_params = {
-        m: TUNERS[m](opt_train_x, opt_val_x, opt_val_y, SEED, N_TRIALS, RESULTS_DIR)
-        for m in BASE_MODELS
-    }
-
-    del opt_train_x, opt_train_y, opt_val_x, opt_val_y
-    cleanup_memory()
-    clear_dataset_cache()
-    return best_params
 
 
 def run_experiment(dataset, run_cfg, best_params):
@@ -77,33 +68,38 @@ def run_experiment(dataset, run_cfg, best_params):
         dataset, SEED, run_cfg["n_train_final"], run_cfg["n_val_final"], run_cfg["n_test_final"]
     )
 
-    val_cols, test_cols, runtime_train, runtime_inference = [], [], 0.0, 0.0
-    for model_name in BASE_MODELS:
-        v, t, tr, inf = SCORERS[model_name](best_params[model_name], train_x, val_x, test_x)
-        val_cols.append(v); test_cols.append(t)
-        runtime_train += tr; runtime_inference += inf
+    if_val, if_test, tr_if, inf_if = BASELINE_REGISTRY["IsolationForest"]["scorer"](
+        best_params["IsolationForest"], train_x, val_x, test_x, SEED)
+    lof_val, lof_test, tr_lof, inf_lof = BASELINE_REGISTRY["LOF"]["scorer"](
+        best_params["LOF"], train_x, val_x, test_x, SEED)
+    ocsvm_val, ocsvm_test, tr_ocsvm, inf_ocsvm = BASELINE_REGISTRY["OneClassSVM"]["scorer"](
+        best_params["OneClassSVM"], train_x, val_x, test_x, SEED)
+    dbscan_val, dbscan_test, tr_dbscan, inf_dbscan = BASELINE_REGISTRY["DBSCAN"]["scorer"](
+        best_params["DBSCAN"], train_x, val_x, test_x, SEED)
 
-    val_matrix = np.column_stack(val_cols)
-    test_matrix = np.column_stack(test_cols)
+    val_matrix = np.column_stack([if_val, lof_val, ocsvm_val, dbscan_val])
+    test_matrix = np.column_stack([if_test, lof_test, ocsvm_test, dbscan_test])
 
     best_meta = tune_meta_fusion(val_matrix, val_y, SEED, META_TRIALS, RESULTS_DIR, FUSION_STRATEGIES)
     fused_val, fused_test = apply_meta_fusion(best_meta, val_matrix, test_matrix, val_y, SEED)
 
-    threshold_candidates = compare_threshold_strategies(val_y, fused_val, beta=2.0, normal_q=0.99)
-    chosen_threshold_info = {"selection_method": "validation_f1_max", **threshold_candidates["f1_max"]}
-    best_threshold = chosen_threshold_info["threshold"]
+    metrics, threshold_info, threshold_variants, pr_curve, threshold_candidates = calibrate_and_evaluate(
+        val_y, fused_val, test_y, fused_test,
+        beta=FBETA, normal_q=NORMAL_Q, min_recall=MIN_RECALL_TARGET,
+    )
 
-    print(f"[{dataset} run{run_index}] threshold candidates: {threshold_candidates}")
-    print(f"[{dataset} run{run_index}] chosen threshold={best_threshold:.4f} by validation_f1_max")
-
-    metrics = evaluate_scores(test_y, fused_test, threshold=best_threshold)
-    print_metrics(f"{MODEL_TYPE} final - {dataset} run{run_index}", metrics)
+    print(f"[{dataset} run{run_index}] threshold candidates (na val_calib): {threshold_candidates}")
+    print_metrics(f"{MODEL_TYPE} (standard) - {dataset} run{run_index}", metrics)
+    print_metrics(f"{MODEL_TYPE} (recall_oriented) - {dataset} run{run_index}", threshold_variants["recall_oriented"])
+    print_metrics(f"{MODEL_TYPE} (operational, min_recall={MIN_RECALL_TARGET}) - {dataset} run{run_index}", threshold_variants["operational"])
 
     result_bundle = {
         "metrics": metrics,
-        "runtime_train": runtime_train,
-        "runtime_inference": runtime_inference,
-        "threshold_info": {"candidates": threshold_candidates, "chosen": chosen_threshold_info},
+        "runtime_train": tr_if + tr_lof + tr_ocsvm + tr_dbscan,
+        "runtime_inference": inf_if + inf_lof + inf_ocsvm + inf_dbscan,
+        "threshold_info": threshold_info,
+        "threshold_variants": threshold_variants,
+        "pr_curve": pr_curve,
         "fusion_strategy": best_meta["fusion_strategy"],
         "meta": best_meta,
     }
@@ -124,11 +120,13 @@ def save_results(dataset, run_cfg, best_params, result_bundle):
         preprocessing_version=PREPROCESSING_VERSION,
         model_type=MODEL_TYPE,
         fusion_strategy=result_bundle["fusion_strategy"],
-        hyperparameters={"base_models": BASE_MODELS, "best_params": best_params, "meta": result_bundle["meta"]},
+        hyperparameters={**best_params, "meta": result_bundle["meta"]},
         metrics=result_bundle["metrics"],
         runtime_train=result_bundle["runtime_train"],
         runtime_inference=result_bundle["runtime_inference"],
         threshold_info=result_bundle["threshold_info"],
+        threshold_variants=result_bundle["threshold_variants"],
+        pr_curve=result_bundle["pr_curve"],
     )
     save_record_json(record, RESULTS_DIR, run_index, MODEL_TYPE, dataset)
     return record
@@ -143,7 +141,7 @@ def main():
     optuna.logging.set_verbosity(optuna.logging.WARNING)
 
     run_cfg = RUN_CONFIGS[args.run_index]
-    best_params = run_optuna(args.dataset, run_cfg)
+    best_params = load_all_baseline_params(RESULTS_DIR, args.run_index, args.dataset)
     result_bundle = run_experiment(args.dataset, run_cfg, best_params)
     record = save_results(args.dataset, run_cfg, best_params, result_bundle)
 

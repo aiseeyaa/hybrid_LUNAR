@@ -31,16 +31,26 @@ MODEL_TYPE = "IsolationForest"
 FUSION_STRATEGY = "none"
 
 RUN_CONFIGS = {
-    1: dict(run_index=1, n_train_opt=7000, n_val_opt=3000,
-            n_train_final=154000, n_val_final=66000, n_test_final=100000,
-            notes="run1_small_opt_sample"),
-    2: dict(run_index=2, n_train_opt=21000, n_val_opt=9000,
-            n_train_final=154000, n_val_final=66000, n_test_final=100000,
-            notes="run2_medium_opt_sample"),
-    3: dict(run_index=3, n_train_opt=35000, n_val_opt=15000,
-            n_train_final=154000, n_val_final=66000, n_test_final=100000,
-            notes="run3_large_opt_sample"),
-}
+        1: dict(
+            run_index=1,
+            n_train_opt=7000, n_val_opt=3000,
+            n_train_final=40000, n_val_final=12000, n_test_final=80000,
+            notes="run1_small_opt_sample",
+        ),
+        2: dict(
+            run_index=2,
+            n_train_opt=14000, n_val_opt=6000,
+            n_train_final=40000, n_val_final=12000, n_test_final=80000,
+            notes="run2_medium_opt_sample",
+        ),
+        3: dict(
+            run_index=3,
+            n_train_opt=21000, n_val_opt=9000,
+            n_train_final=40000, n_val_final=12000, n_test_final=80000,
+            notes="run3_large_opt_sample",
+        ),
+    }
+
 
 
 def cleanup_memory():

@@ -1,60 +1,82 @@
 aisia@DESKTOP-J18CUA4 MINGW64 ~/Desktop/Meisterstück/mgr inz/ver1004/hybrid_LUNAR (main)
 $  source "/c/Users/aisia/Desktop/Meisterstück/mgr inz/ver1004/hybrid_LUNAR/venv/Scripts/activate"
 (venv) 
+
+"c:\Users\aisia\Desktop\Meisterstück\mgr inz\ver1004\hybrid_LUNAR\venv\Scripts\activate"
+
+
 aisia@DESKTOP-J18CUA4 MINGW64 ~/Desktop/Meisterstück/mgr inz/ver1004/hybrid_LUNAR (main)
 $ cd ./experiments
 (venv) 
 aisia@DESKTOP-J18CUA4 MINGW64 ~/Desktop/Meisterstück/mgr inz/ver1004/hybrid_LUNAR/experiments (main)
-python run_single_experiment.py CICIDS 1 && \
-python run_single_experiment.py UNSW_NB15 1 && \
-python aggregate_results.py && \
+
 python run_lof.py CICIDS 1 && \
 python run_lof.py UNSW_NB15 1 && \
-python aggregate_results.py && \
 python run_isolation_forest.py CICIDS 1 && \
 python run_isolation_forest.py UNSW_NB15 1 && \
-python aggregate_results.py && \
-
-
 python run_one_class_svm.py CICIDS 1 && \
 python run_one_class_svm.py UNSW_NB15 1 && \
-python aggregate_results.py && \
+python run_single_experiment.py CICIDS 1 && \
+python run_single_experiment.py UNSW_NB15 1 && \
 python run_ensemble_without_lunar.py CICIDS 1 && \
 python run_ensemble_without_lunar.py UNSW_NB15 1 && \
-python aggregate_results.py && \
 python run_ensemble_with_lunar.py CICIDS 1 && \
 python run_ensemble_with_lunar.py UNSW_NB15 1 && \
-python aggregate_results.py && \
-python run_ensemble_with_lunar.py CICIDS 1 && \
-python run_ensemble_with_lunar.py UNSW_NB15 1 && \
-python aggregate_results.py && \
-python run_lunar_fusion_strategies.py CICIDS 1 && \
+python run_lunar_self_ensemble.py CICIDS 1 && \
+python run_lunar_self_ensemble.py UNSW_NB15 1 && \
+python run_lunar_with_best_baseline.py  CICIDS 1 && \
+python run_lunar_with_best_baseline.py  UNSW_NB15 1 && \
+python run_fusion_level_comparison.py  CICIDS 1 && \
+python run_fusion_level_comparison.py UNSW_NB15 1 && \
+
+python run_lunar_fusion_strategies.py  CICIDS 1 && \
 python run_lunar_fusion_strategies.py UNSW_NB15 1 && \
-python aggregate_results.py && \
-python run_lunar_epochs_analysis.py CICIDS 1 && \
-python run_lunar_epochs_analysis.py UNSW_NB15 1 && \
-python aggregate_results.py && \
-python run_single_experiment.py CICIDS 2 && \
-python run_single_experiment.py UNSW_NB15 2 && \
-python aggregate_results.py && \
-python run_single_experiment.py CICIDS 3 && \
-python run_single_experiment.py UNSW_NB15 3 && \
-python aggregate_results.py && \
+python run_robustness_analysis.py  CICIDS 1 && \
+python run_robustness_analysis.py UNSW_NB15 1 && \
+python aggregate_results.py 
+
+
 python run_lof.py CICIDS 2 && \
 python run_lof.py UNSW_NB15 2 && \
-python aggregate_results.py && \
-python run_lof.py CICIDS 3 && \
-python run_lof.py UNSW_NB15 3 && \
-python aggregate_results.py && \
 python run_isolation_forest.py CICIDS 2 && \
 python run_isolation_forest.py UNSW_NB15 2 && \
-python aggregate_results.py && \
-python run_isolation_forest.py CICIDS 3 && \
-python run_one_class_svm.py UNSW_NB15 3 && \
-python aggregate_results.py && \
 python run_one_class_svm.py CICIDS 2 && \
 python run_one_class_svm.py UNSW_NB15 2 && \
-python aggregate_results.py && \
+python run_single_experiment.py CICIDS 2 && \
+python run_single_experiment.py UNSW_NB15 2 && \
+python run_ensemble_without_lunar.py CICIDS 2 && \
+python run_ensemble_without_lunar.py UNSW_NB15 2 && \
+python run_ensemble_with_lunar.py CICIDS 2 && \
+python run_ensemble_with_lunar.py UNSW_NB15 2 && \
+python run_lunar_self_ensemble.py CICIDS 2 && \
+python run_lunar_self_ensemble.py UNSW_NB15 2 && \
+python run_lunar_with_best_baseline.py  CICIDS 2 && \
+python run_lunar_with_best_baseline.py  UNSW_NB15 2 && \
+python run_fusion_level_comparison.py  CICIDS 2 && \
+python run_fusion_level_comparison.py UNSW_NB15 2 && \
+python run_robustness_analysis.py  CICIDS 2 && \
+python run_robustness_analysis.py UNSW_NB15 2 && \
+python aggregate_results.py 
+
+
+python run_lof.py CICIDS 3 && \
+python run_lof.py UNSW_NB15 3 && \
+python run_isolation_forest.py CICIDS 3 && \
+python run_isolation_forest.py UNSW_NB15 3 && \
 python run_one_class_svm.py CICIDS 3 && \
 python run_one_class_svm.py UNSW_NB15 3 && \
-python aggregate_results.py && \ 
+python run_single_experiment.py CICIDS 3 && \
+python run_single_experiment.py UNSW_NB15 3 && \
+python run_ensemble_without_lunar.py CICIDS 3 && \
+python run_ensemble_without_lunar.py UNSW_NB15 3 && \
+python run_ensemble_with_lunar.py CICIDS 3 && \
+python run_ensemble_with_lunar.py UNSW_NB15 3 && \
+python run_lunar_self_ensemble.py CICIDS 3 && \
+python run_lunar_self_ensemble.py UNSW_NB15 3 && \
+python run_lunar_with_best_baseline.py  CICIDS 3 && \
+python run_lunar_with_best_baseline.py  UNSW_NB15 3 && \
+python run_fusion_level_comparison.py  CICIDS 3 && \
+python run_fusion_level_comparison.py UNSW_NB15 3 && \
+python run_robustness_analysis.py  CICIDS 3 && \
+python run_robustness_analysis.py UNSW_NB15 3 && \
+python aggregate_results.py 
