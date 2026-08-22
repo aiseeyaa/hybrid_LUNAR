@@ -1,5 +1,5 @@
 {
-  "experiment_id": "aad36599-4c6f-43ba-a525-f2468be67d75",
+  "experiment_id": "4780343a-4b9a-44c4-a9fa-6f02b4c459d3",
   "dataset_name": "UNSW_NB15",
   "dataset_version": "v1",
   "split_method": "stratified_train_val_calib_test_fixed_seed",
@@ -17,20 +17,20 @@
       "proportion": 1,
       "n_epochs": 150
     },
-    "if": {
+    "IsolationForest": {
       "n_estimators": 200,
       "max_samples": 0.9957985193847085,
       "max_features": 0.6228493129767585,
       "contamination": 0.12165068554909408,
       "bootstrap": false
     },
-    "lof": {
+    "LOF": {
       "metric": "manhattan",
       "n_neighbors": 17,
       "leaf_size": 20,
       "contamination": 0.09716092986497221
     },
-    "ocsvm": {
+    "OneClassSVM": {
       "kernel": "rbf",
       "nu": 0.26150896733142687,
       "gamma": "scale"
@@ -67,8 +67,8 @@
   ],
   "Recall_at_FPR_0.01": 0.5171403922993099,
   "Precision_at_Recall_0.80": 0.8324632066334365,
-  "runtime_train": 527.3176219463348,
-  "runtime_inference": 157.5669891834259,
+  "runtime_train": 527.2029395103455,
+  "runtime_inference": 156.34743070602417,
   "threshold_variants": {
     "standard": {
       "AUC_ROC": 0.8904901006236309,

@@ -1,0 +1,15 @@
+dataset_name,fusion_strategy,param,robustness_index
+CICIDS,bagging,feature_dropout,0.6705461425499315
+CICIDS,rank_mean,feature_dropout,0.763561942400328
+UNSW_NB15,bagging,feature_dropout,0.8353086644335344
+UNSW_NB15,rank_mean,feature_dropout,0.8152048333881092
+CICIDS,bagging,imbalance_factor_test,0.5829882953592225
+CICIDS,rank_mean,imbalance_factor_test,0.6317566580124989
+UNSW_NB15,bagging,imbalance_factor_test,0.8032073361073504
+UNSW_NB15,rank_mean,imbalance_factor_test,0.7211226684932956
+CICIDS,bagging,noise,0.5692512259628301
+CICIDS,rank_mean,noise,0.6536391096021398
+CICIDS,weighted,noise,0.49870458779872473
+UNSW_NB15,bagging,noise,0.8375156610252548
+UNSW_NB15,stacking_lr,noise,0.8435961742924261
+UNSW_NB15,weighted,noise,0.8339818693304067

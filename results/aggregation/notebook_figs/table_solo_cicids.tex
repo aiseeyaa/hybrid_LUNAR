@@ -1,0 +1,18 @@
+\begin{table}[H]
+\centering
+\caption{Wyniki modeli pojedynczych dla CICIDS 2017 w~wariancie standardowego progu; średnia $\pm$ odchylenie standardowe z~trzech uruchomień}
+\label{tab:solo_cicids}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\hline
+Model & ROC AUC & PR AUC & Precision & Recall & $F_1$ \\
+\hline
+Isolation Forest & $0{,}819 \pm 0{,}009$ & $0{,}608 \pm 0{,}010$ & $0{,}712 \pm 0{,}200$ & $0{,}501 \pm 0{,}168$ & $0{,}551 \pm 0{,}016$ \\
+LOF & $0{,}848 \pm 0{,}008$ & $0{,}543 \pm 0{,}039$ & $0{,}583 \pm 0{,}005$ & $0{,}766 \pm 0{,}069$ & $0{,}662 \pm 0{,}026$ \\
+LUNAR & \textbf{$0{,}869 \pm 0{,}004$} & \textbf{$0{,}743 \pm 0{,}013$} & $0{,}670 \pm 0{,}020$ & $0{,}687 \pm 0{,}001$ & $0{,}678 \pm 0{,}010$ \\
+OneClassSVM & $0{,}768 \pm 0{,}001$ & $0{,}623 \pm 0{,}000$ & $0{,}243 \pm 0{,}000$ & \textbf{$1{,}000 \pm 0{,}000$} & $0{,}391 \pm 0{,}000$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+Źródło: opracowanie własne.

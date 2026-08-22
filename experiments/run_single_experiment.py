@@ -163,10 +163,8 @@ def run_optuna(dataset, run_cfg):
     run_index = run_cfg["run_index"]
     study_name = f"LUNAR_{dataset}_run{run_index}"
 
-    # NOTE: make_optuna_subsample now draws exclusively from val_tune, the
-    # tuning half of the validation split. val_calib (used below for
-    # threshold calibration) is never seen here, so hyperparameter search
-    # and threshold selection use disjoint validation data.
+    # NOTE: make_optuna_subsample - val_tune only
+    # val_calib is never used here
     train_x, train_y, val_x, val_y = make_optuna_subsample(
         dataset, SEED, run_cfg["n_train_opt"], run_cfg["n_val_opt"]
     )
@@ -185,8 +183,7 @@ def run_optuna(dataset, run_cfg):
 
 def run_experiment(dataset, run_cfg, best_params):
     run_index = run_cfg["run_index"]
-    # val_x/val_y here are val_calib -- disjoint from the val_tune data used
-    # in run_optuna. This is the data used only for threshold calibration.
+    # val_x/val_y here are val_calib -- disjoint from val_tune 
     train_x, train_y, val_x, val_y, test_x, test_y = make_final_subsample(
         dataset,
         SEED,

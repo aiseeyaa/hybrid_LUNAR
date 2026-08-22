@@ -1,0 +1,32 @@
+\begin{table}
+\caption{Zestawienie najlepszych wariantów modeli wg F1 (próg standardowy).}
+\label{tab:final_comparison}
+\begin{tabular}{llrrrrrr}
+\toprule
+Dataset & Model & AUC\_ROC & F1 & Precision & Recall & T\_train [s] & T\_infer [s] \\
+\midrule
+CICIDS & Fusion (best level) & 0.960 & 0.822 & 0.794 & 0.853 & 254.200 & 11.628 \\
+CICIDS & Robustness (best cfg) & 0.900 & 0.779 & 0.724 & 0.844 & 180.319 & 30.188 \\
+CICIDS & LUNAR+BestBaseline & 0.892 & 0.772 & 0.721 & 0.832 & 181.732 & 29.959 \\
+CICIDS & Ensemble -LUNAR & 0.884 & 0.725 & 0.712 & 0.740 & 4.850 & 6.039 \\
+CICIDS & Ensemble +LUNAR & 0.889 & 0.709 & 0.681 & 0.738 & 217.366 & 13.727 \\
+CICIDS & LOF (baseline) & 0.857 & 0.692 & 0.586 & 0.845 & 1.645 & 3.281 \\
+CICIDS & LUNAR (solo) & 0.874 & 0.690 & 0.693 & 0.686 & 165.364 & 7.711 \\
+CICIDS & LUNAR Self-Ensemble & 0.799 & 0.684 & 0.687 & 0.681 & 886.128 & 39.044 \\
+CICIDS & Fusion v2 (robust) & 0.853 & 0.628 & 0.508 & 0.822 & 213.916 & 9.005 \\
+CICIDS & IsolationForest (baseline) & 0.829 & 0.568 & 0.481 & 0.695 & 0.634 & 1.189 \\
+CICIDS & OneClassSVM (baseline) & 0.768 & 0.391 & 0.243 & 1.000 & 0.791 & 1.673 \\
+UNSW\_NB15 & Fusion (best level) & 0.955 & 0.872 & 0.812 & 0.943 & 348.038 & 78.346 \\
+UNSW\_NB15 & LUNAR Self-Ensemble & 0.884 & 0.845 & 0.924 & 0.779 & 2092.762 & 64.882 \\
+UNSW\_NB15 & Robustness (best cfg) & 0.884 & 0.845 & 0.924 & 0.779 & 1256.397 & 39.210 \\
+UNSW\_NB15 & Fusion v2 (robust) & 0.895 & 0.844 & 0.913 & 0.785 & 306.154 & 16.407 \\
+UNSW\_NB15 & LUNAR (solo) & 0.884 & 0.841 & 0.902 & 0.788 & 417.941 & 13.585 \\
+UNSW\_NB15 & LOF (baseline) & 0.884 & 0.827 & 0.851 & 0.804 & 29.208 & 57.421 \\
+UNSW\_NB15 & LUNAR+BestBaseline & 0.900 & 0.823 & 0.918 & 0.745 & 450.902 & 79.397 \\
+UNSW\_NB15 & Ensemble +LUNAR & 0.892 & 0.821 & 0.800 & 0.843 & 627.991 & 164.606 \\
+UNSW\_NB15 & Ensemble -LUNAR & 0.875 & 0.811 & 0.829 & 0.793 & 121.937 & 151.728 \\
+UNSW\_NB15 & IsolationForest (baseline) & 0.846 & 0.801 & 0.786 & 0.817 & 1.524 & 3.495 \\
+UNSW\_NB15 & OneClassSVM (baseline) & 0.816 & 0.786 & 0.832 & 0.745 & 72.247 & 58.504 \\
+\bottomrule
+\end{tabular}
+\end{table}

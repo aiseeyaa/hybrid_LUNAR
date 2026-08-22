@@ -1,21 +1,5 @@
-"""
-CO TU ROBIMY (Eksperyment 5 z drabiny ablacyjnej, BEZ WLASNEGO TUNINGU):
-Pelna hybryda: LUNAR + WSZYSTKIE 4 klasyczne modele polaczone jedna z 5
-strategii fuzji score-level.
+# LUNAR + WSZYSTKIE 4 klasyczne modele polaczone jedna z 5 strategii fuzji score-level (wybierama w tuningu)
 
-ZMIANA: ten skrypt NIE TUNUJE JUZ LUNAR-a ani klasycznych modeli od nowa.
-Wczytuje hiperparametry LUNAR-a z run_single_experiment.py (przez
-lunar_params_loading.py) oraz hiperparametry 4 klasycznych modeli z
-run_isolation_forest.py / run_lof.py / run_ocsvm.py / run_dbscan.py (przez
-baseline_selection.py). Jedyne "nowe" tunowanie tutaj to dobor strategii
-fuzji (tune_meta_fusion).
-
-WYMAGA wczesniej uruchomionych: run_single_experiment.py,
-run_isolation_forest.py, run_lof.py, run_ocsvm.py, run_dbscan.py dla tego
-samego (dataset, run_index).
-
-Nie modyfikuje LUNAR.py, utils.py ani variables.py.
-"""
 
 import sys
 import gc
@@ -60,9 +44,9 @@ FBETA = 2.0
 NORMAL_Q = 0.99
 
 RUN_CONFIGS = {
-    1: dict(run_index=1, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run1"),
-    2: dict(run_index=2, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run2"),
-    3: dict(run_index=3, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run3"),
+    1: dict(run_index=1, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run1"),
+    2: dict(run_index=2, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run2"),
+    3: dict(run_index=3, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run3"),
 }
 
 
@@ -120,11 +104,10 @@ def run_experiment(dataset, run_cfg, lunar_params, classical_params):
         classical_params["LOF"], train_x, val_x, test_x, SEED)
     ocsvm_val, ocsvm_test, tr_ocsvm, inf_ocsvm = BASELINE_REGISTRY["OneClassSVM"]["scorer"](
         classical_params["OneClassSVM"], train_x, val_x, test_x, SEED)
-    dbscan_val, dbscan_test, tr_dbscan, inf_dbscan = BASELINE_REGISTRY["DBSCAN"]["scorer"](
-        classical_params["DBSCAN"], train_x, val_x, test_x, SEED)
 
-    val_matrix = np.column_stack([lunar_val, if_val, lof_val, ocsvm_val, dbscan_val])
-    test_matrix = np.column_stack([lunar_test, if_test, lof_test, ocsvm_test, dbscan_test])
+
+    val_matrix = np.column_stack([lunar_val, if_val, lof_val, ocsvm_val])
+    test_matrix = np.column_stack([lunar_test, if_test, lof_test, ocsvm_test])
 
     best_meta = tune_meta_fusion(val_matrix, val_y, SEED, META_TRIALS, RESULTS_DIR, FUSION_STRATEGIES)
     fused_val, fused_test = apply_meta_fusion(best_meta, val_matrix, test_matrix, val_y, SEED)
@@ -141,8 +124,8 @@ def run_experiment(dataset, run_cfg, lunar_params, classical_params):
 
     result_bundle = {
         "metrics": metrics,
-        "runtime_train": tr_lunar + tr_if + tr_lof + tr_ocsvm + tr_dbscan,
-        "runtime_inference": inf_lunar + inf_if + inf_lof + inf_ocsvm + inf_dbscan,
+        "runtime_train": tr_lunar + tr_if + tr_lof + tr_ocsvm,
+        "runtime_inference": inf_lunar + inf_if + inf_lof + inf_ocsvm,
         "threshold_info": threshold_info,
         "threshold_variants": threshold_variants,
         "pr_curve": pr_curve,

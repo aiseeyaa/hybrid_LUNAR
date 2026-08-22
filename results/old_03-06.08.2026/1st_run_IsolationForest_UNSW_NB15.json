@@ -1,0 +1,80 @@
+{
+  "experiment_id": "9fab805a-3759-47f2-b02c-8adb3b2ad213",
+  "dataset_name": "UNSW_NB15",
+  "dataset_version": "v1",
+  "split_method": "stratified_train_val_test_fixed_seed",
+  "seed": 29,
+  "preprocessing_version": "v1",
+  "model_type": "IsolationForest",
+  "fusion_strategy": "none",
+  "hyperparameters": {
+    "n_estimators": 200,
+    "max_samples": 0.9957985193847085,
+    "max_features": 0.6228493129767585,
+    "contamination": 0.12165068554909408,
+    "bootstrap": false
+  },
+  "threshold": 0.14694009461054644,
+  "threshold_info": {
+    "candidates": {
+      "f1_max": {
+        "threshold": 0.14694009461054644,
+        "score_name": "F1",
+        "score_value": 0.8336816960286652,
+        "precision": 0.8225069966121668,
+        "recall": 0.8451642197669139
+      },
+      "f2_max": {
+        "threshold": 0.034560917241525636,
+        "score_name": "F2",
+        "score_value": 0.8723602071988312,
+        "precision": 0.5855398056521351,
+        "recall": 0.9940971696685333
+      },
+      "normal_q_0.99": {
+        "threshold": 0.47392834090036645,
+        "score_name": "F1",
+        "score_value": 0.5505385703405505,
+        "precision": 0.9791021671826625,
+        "recall": 0.3829271984259119
+      },
+      "operational": {
+        "threshold": 0.06821526997554696,
+        "score_name": "Precision@MinRecall",
+        "score_value": 0.6366556043250188,
+        "precision": 0.6366556043250188,
+        "recall": 0.9001059482367186,
+        "min_recall_target": 0.9,
+        "recall_floor_met": true
+      }
+    },
+    "chosen": {
+      "selection_method": "validation_f1_max",
+      "threshold": 0.14694009461054644,
+      "score_name": "F1",
+      "score_value": 0.8336816960286652,
+      "precision": 0.8225069966121668,
+      "recall": 0.8451642197669139
+    }
+  },
+  "model_path": "C:\\Users\\aisia\\Desktop\\Meisterst\u00fcck\\mgr inz\\ver1004\\hybrid_LUNAR\\models\\IsolationForest\\UNSW_NB15_run1.joblib",
+  "AUC_ROC": 0.8443037666807347,
+  "AUC_PR": 0.8900005612969604,
+  "Precision": 0.7823638952787819,
+  "Recall": 0.8107292045041773,
+  "F1": 0.7962940251747628,
+  "ConfusionMatrix": [
+    [
+      26018,
+      9934
+    ],
+    [
+      8337,
+      35711
+    ]
+  ],
+  "Recall_at_FPR_0.01": 0.39120958953868507,
+  "Precision_at_Recall_0.80": 0.7913719149318422,
+  "runtime_train": 4.125842332839966,
+  "runtime_inference": 8.465020656585693
+}

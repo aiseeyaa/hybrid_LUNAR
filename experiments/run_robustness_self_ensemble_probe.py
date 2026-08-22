@@ -13,10 +13,9 @@ Przyklady uzycia:
   python run_robustness_self_ensemble_probe.py CICIDS 1 --factor feature_dropout --value 0.30 --strategy stacking --n_instances 7 --compare_baseline
 
 WYMAGA wczesniej uruchomionego: run_single_experiment.py (zawsze), oraz
-run_isolation_forest.py / run_lof.py / run_ocsvm.py / run_dbscan.py (tylko
+run_isolation_forest.py / run_lof.py / run_ocsvm.py (tylko
 jesli podano --compare_baseline).
 
-Nie modyfikuje LUNAR.py, utils.py ani variables.py.
 """
 
 import sys
@@ -57,9 +56,9 @@ FBETA = 2.0
 NORMAL_Q = 0.99
 
 RUN_CONFIGS = {
-    1: dict(run_index=1, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run1"),
-    2: dict(run_index=2, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run2"),
-    3: dict(run_index=3, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run3"),
+    1: dict(run_index=1, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run1"),
+    2: dict(run_index=2, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run2"),
+    3: dict(run_index=3, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run3"),
 }
 
 

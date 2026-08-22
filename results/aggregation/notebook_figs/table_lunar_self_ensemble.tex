@@ -1,0 +1,24 @@
+\begin{table}[H]
+\centering
+\caption{Porównanie pojedynczego LUNAR i~zespołów homogenicznych przy~progu standardowym}
+\label{tab:lunar_self_ensemble}
+\begin{tabular}{llrrrr}
+\hline
+Zbiór & Wariant & ROC AUC & PR AUC & $F_1$ & Czas uczenia [s] \\
+\hline
+CICIDS 2017 & LUNAR & $0{,}869 \pm 0{,}004$ & $0{,}743 \pm 0{,}013$ & $0{,}678 \pm 0{,}010$ & $224{,}77 \pm 80{,}43$ \\
+CICIDS 2017 & Bagging & $0{,}865 \pm 0{,}002$ & $0{,}735 \pm 0{,}001$ & $0{,}668 \pm 0{,}005$ & $1182{,}46 \pm 397{,}01$ \\
+CICIDS 2017 & Boosting & $0{,}867 \pm 0{,}000$ & $0{,}736 \pm 0{,}002$ & $0{,}669 \pm 0{,}003$ & $1188{,}31 \pm 409{,}43$ \\
+CICIDS 2017 & Stacking & $0{,}782 \pm 0{,}145$ & $0{,}684 \pm 0{,}087$ & $0{,}649 \pm 0{,}041$ & $1193{,}97 \pm 375{,}17$ \\
+CICIDS 2017 & Voting & $0{,}794 \pm 0{,}004$ & $0{,}551 \pm 0{,}006$ & $0{,}682 \pm 0{,}002$ & $1247{,}42 \pm 368{,}04$ \\
+\hline
+UNSW-NB15 & LUNAR & $0{,}889 \pm 0{,}005$ & $0{,}930 \pm 0{,}002$ & $0{,}839 \pm 0{,}002$ & $373{,}52 \pm 61{,}87$ \\
+UNSW-NB15 & Bagging & $0{,}888 \pm 0{,}005$ & $0{,}930 \pm 0{,}002$ & $0{,}840 \pm 0{,}006$ & $1878{,}45 \pm 308{,}02$ \\
+UNSW-NB15 & Boosting & $0{,}888 \pm 0{,}004$ & $0{,}928 \pm 0{,}003$ & $0{,}840 \pm 0{,}006$ & $1867{,}92 \pm 295{,}80$ \\
+UNSW-NB15 & Stacking & $0{,}892 \pm 0{,}003$ & $0{,}932 \pm 0{,}002$ & $0{,}839 \pm 0{,}006$ & $1868{,}92 \pm 299{,}74$ \\
+UNSW-NB15 & Voting & $0{,}849 \pm 0{,}005$ & $0{,}843 \pm 0{,}009$ & $0{,}838 \pm 0{,}003$ & $1868{,}71 \pm 298{,}06$ \\
+\hline
+\end{tabular}
+\end{table}
+
+Źródło: opracowanie własne.

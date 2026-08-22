@@ -1,5 +1,5 @@
 {
-  "experiment_id": "0e4a04df-5141-4d34-b8f4-f6894887eaef",
+  "experiment_id": "54ecce41-68a3-4354-acf0-4cfb568f9720",
   "dataset_name": "UNSW_NB15",
   "dataset_version": "v1",
   "split_method": "stratified_train_val_calib_test_fixed_seed",
@@ -15,7 +15,10 @@
     "epsilon": 0.4988983246822969,
     "proportion": 1,
     "n_epochs": 150,
-    "n_instances": 5
+    "n_instances": 5,
+    "extra": {
+      "n_instances": 5
+    }
   },
   "threshold": 0.3998671231198679,
   "threshold_info": {
@@ -44,8 +47,8 @@
   ],
   "Recall_at_FPR_0.01": 0.6985107155830004,
   "Precision_at_Recall_0.80": 0.872823637219209,
-  "runtime_train": 4607.261682510376,
-  "runtime_inference": 137.27188682556152,
+  "runtime_train": 2092.762129545212,
+  "runtime_inference": 64.88181614875793,
   "threshold_variants": {
     "standard": {
       "AUC_ROC": 0.8837447987062621,

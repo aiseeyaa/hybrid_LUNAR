@@ -1,5 +1,5 @@
 {
-  "experiment_id": "fbff8c73-1def-42c3-8ff1-3e43bbe11cfe",
+  "experiment_id": "b33b332d-72a6-4a9d-9acc-5da7391576d0",
   "dataset_name": "CICIDS",
   "dataset_version": "v1",
   "split_method": "stratified_train_val_calib_test_fixed_seed",
@@ -55,8 +55,8 @@
   ],
   "Recall_at_FPR_0.01": 0.07914928763163329,
   "Precision_at_Recall_0.80": 0.7343187417093046,
-  "runtime_train": 202.14243984222412,
-  "runtime_inference": 10.420983076095581,
+  "runtime_train": 216.71650099754333,
+  "runtime_inference": 10.439482688903809,
   "threshold_variants": {
     "standard": {
       "AUC_ROC": 0.8985370251652363,

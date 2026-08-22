@@ -1,23 +1,6 @@
-"""
-CO TU ROBIMY (Eksperyment 6 z drabiny ablacyjnej, BEZ WLASNEGO TUNINGU):
-Bierzemy zwycieska pare LUNAR + najlepszy klasyczny baseline i porownujemy
-TRZY POZIOMY FUZJI (score-level, decision-level OR/AND, feature-level), a
-dodatkowo dokladamy jako punkt odniesienia najlepszy wynik self-ensemble
-LUNAR-a (eksperyment 3).
 
-ZMIANA: hiperparametry LUNAR-a wczytujemy z run_single_experiment.py, a
-hiperparametry klasycznego baseline'u z jego wlasnego solo-wyniku - nic tu
-nie jest tunowane od nowa poza doborem strategii fuzji score-level
-(tune_meta_fusion), co jest jedynym nowym elementem tego eksperymentu.
+# TRZY POZIOMY FUZJI (score-level, decision-level OR/AND, feature-level) + odniesienie do najlepszego wyniku self-ensemble LUNAR
 
-WYMAGA wczesniej uruchomionych:
-  - run_single_experiment.py
-  - run_isolation_forest.py / run_lof.py / run_ocsvm.py / run_dbscan.py
-  - run_lunar_self_ensemble.py
-dla tego samego (dataset, run_index).
-
-Nie modyfikuje LUNAR.py, utils.py ani variables.py.
-"""
 
 import sys
 import gc
@@ -30,6 +13,15 @@ import optuna
 import torch
 from sklearn.linear_model import LogisticRegression
 
+ROOT = Path(__file__).resolve().parent.parent
+SRC_DIR = ROOT / "src"
+EXTERNAL_LUNAR_DIR = ROOT / "external" / "LUNAR"
+RESULTS_DIR = ROOT / "results"
+MODELS_DIR = ROOT / "models"
+
+sys.path.append(str(SRC_DIR))
+sys.path.append(str(EXTERNAL_LUNAR_DIR))
+
 from data import make_final_subsample, clear_dataset_cache
 from metrics import minmax_scale_scores, print_metrics, find_best_f1_threshold
 from results import build_experiment_record, save_record_json
@@ -39,14 +31,6 @@ from baseline_selection import select_best_baseline, BASELINE_REGISTRY
 from self_ensemble_selection import select_best_self_ensemble
 from lunar_params_loading import load_lunar_params
 
-ROOT = Path(__file__).resolve().parent.parent
-SRC_DIR = ROOT / "src"
-EXTERNAL_LUNAR_DIR = ROOT / "external" / "LUNAR"
-RESULTS_DIR = ROOT / "results"
-MODELS_DIR = ROOT / "models"
-
-sys.path.append(str(SRC_DIR))
-sys.path.append(str(EXTERNAL_LUNAR_DIR))
 
 import LUNAR
 import variables as var
@@ -64,9 +48,9 @@ FBETA = 2.0
 NORMAL_Q = 0.99
 
 RUN_CONFIGS = {
-    1: dict(run_index=1, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run1"),
-    2: dict(run_index=2, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run2"),
-    3: dict(run_index=3, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run3"),
+    1: dict(run_index=1, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run1"),
+    2: dict(run_index=2, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run2"),
+    3: dict(run_index=3, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run3"),
 }
 
 

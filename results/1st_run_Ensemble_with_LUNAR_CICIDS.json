@@ -1,5 +1,5 @@
 {
-  "experiment_id": "9f67becf-b675-48c1-b954-d5537546aae8",
+  "experiment_id": "7debc716-c397-4d0c-b26f-9b08fcbafa79",
   "dataset_name": "CICIDS",
   "dataset_version": "v1",
   "split_method": "stratified_train_val_calib_test_fixed_seed",
@@ -17,20 +17,20 @@
       "proportion": 1,
       "n_epochs": 300
     },
-    "if": {
+    "IsolationForest": {
       "n_estimators": 100,
       "max_samples": 0.941166022089951,
       "max_features": 0.9282151157166094,
       "contamination": 0.20272076215422796,
       "bootstrap": true
     },
-    "lof": {
+    "LOF": {
       "metric": "euclidean",
       "n_neighbors": 5,
       "leaf_size": 20,
       "contamination": 0.17842167096072603
     },
-    "ocsvm": {
+    "OneClassSVM": {
       "kernel": "rbf",
       "nu": 0.010180252594543172,
       "gamma": "auto"
@@ -66,8 +66,8 @@
   ],
   "Recall_at_FPR_0.01": 0.3259343382201115,
   "Precision_at_Recall_0.80": 0.5563577737277443,
-  "runtime_train": 211.2925066947937,
-  "runtime_inference": 14.319360971450806,
+  "runtime_train": 217.36609840393066,
+  "runtime_inference": 13.726983070373535,
   "threshold_variants": {
     "standard": {
       "AUC_ROC": 0.8894211293601743,

@@ -1,5 +1,5 @@
 {
-  "experiment_id": "811acb10-d8c3-4dbc-925f-df27598545e3",
+  "experiment_id": "aed6981e-99f6-41dc-981f-6bde69172262",
   "dataset_name": "UNSW_NB15",
   "dataset_version": "v1",
   "split_method": "stratified_train_val_test_fixed_seed",
@@ -73,6 +73,6 @@
   ],
   "Recall_at_FPR_0.01": 0.13044860152560842,
   "Precision_at_Recall_0.80": 0.7094189175720124,
-  "runtime_train": 77.94778180122375,
-  "runtime_inference": 56.04193925857544
+  "runtime_train": 72.2471616268158,
+  "runtime_inference": 58.50371479988098
 }

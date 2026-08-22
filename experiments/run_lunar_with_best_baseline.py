@@ -1,20 +1,4 @@
-"""
-CO TU ROBIMY (Eksperyment 4 z drabiny ablacyjnej, BEZ WLASNEGO TUNINGU):
-Minimalna hybryda: LUNAR + WYLACZNIE JEDEN klasyczny model - ten, ktory
-empirycznie wypadl najlepiej w eksperymentach solo (02-05).
-
-ZMIANA: hiperparametry LUNAR-a wczytujemy z run_single_experiment.py
-(lunar_params_loading.py), hiperparametry klasycznego baseline'u wczytujemy
-z jego solo-wyniku (baseline_selection.py). Nic tu juz nie jest tunowane od
-zera poza doborem strategii fuzji (tune_meta_fusion) - to jedyny NOWY
-element tego eksperymentu.
-
-WYMAGA wczesniej uruchomionych: run_single_experiment.py,
-run_isolation_forest.py, run_lof.py, run_ocsvm.py, run_dbscan.py dla tego
-samego (dataset, run_index).
-
-Nie modyfikuje LUNAR.py, utils.py ani variables.py.
-"""
+# LUNAR + JEDEN klasyczny model - ten, ktory wypadl najlepiej w eksperymentach solo (02-05).
 
 import sys
 import gc
@@ -59,9 +43,9 @@ FBETA = 2.0
 NORMAL_Q = 0.99
 
 RUN_CONFIGS = {
-    1: dict(run_index=1, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run1"),
-    2: dict(run_index=2, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run2"),
-    3: dict(run_index=3, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run3"),
+    1: dict(run_index=1, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run1"),
+    2: dict(run_index=2, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run2"),
+    3: dict(run_index=3, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run3"),
 }
 
 

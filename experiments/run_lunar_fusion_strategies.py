@@ -1,24 +1,8 @@
 """
-CO TU ROBIMY (BEZ WLASNEGO TUNINGU LUNAR-a/IF):
-STATUS: eksperyment archiwalny/opcjonalny - w duzej mierze zdublowany przez
-eksperyment 4 (run_lunar_with_best_baseline.py) i eksperyment 7
-(run_robustness_analysis.py). Zostaw jako dodatkowy, jesli akurat interesuje
-Cie konkretnie para LUNAR+IsolationForest (nie automatycznie wybierany
-najlepszy baseline).
+STATUS: eksperyment archiwalny/opcjonalny - większościowo zdublowany przez
+run_lunar_with_best_baseline.py i run_robustness_analysis.py. 
+Zostawiam, bo sprawdzimy LUNAR z IF (wcześniej był z LOF).
 
-ZMIANA: hiperparametry LUNAR-a i IsolationForest wczytujemy z ich solo-
-wynikow (run_single_experiment.py, run_isolation_forest.py) zamiast tunowac
-je od nowa. Jedyne tunowanie w tym skrypcie to dobor strategii fuzji
-(tune_meta_fusion) dla kazdego punktu siatki noise/imbalance.
-
-POPRAWKA (z wczesniejszej wersji): niezbalansowanie stosujemy na ZBIORZE
-TESTOWYM, nie na train (train jest z zalozenia czysto normalny - patrz
-utils.load_dataset).
-
-WYMAGA wczesniej uruchomionych: run_single_experiment.py,
-run_isolation_forest.py dla tego samego (dataset, run_index).
-
-Nie modyfikuje LUNAR.py, utils.py ani variables.py.
 """
 
 import sys
@@ -66,9 +50,9 @@ FBETA = 2.0
 NORMAL_Q = 0.99
 
 RUN_CONFIGS = {
-    1: dict(run_index=1, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run1"),
-    2: dict(run_index=2, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run2"),
-    3: dict(run_index=3, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run3"),
+    1: dict(run_index=1, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run1"),
+    2: dict(run_index=2, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run2"),
+    3: dict(run_index=3, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run3"),
 }
 
 

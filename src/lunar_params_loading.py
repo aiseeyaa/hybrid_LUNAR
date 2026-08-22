@@ -1,20 +1,4 @@
-"""
-CO TU ROBIMY:
-Wspolny modul do wczytywania JUZ DOSTROJONYCH hiperparametrow LUNAR-a z
-wyniku run_single_experiment.py (eksperyment solo LUNAR), zamiast ponownego
-tunowania Optuna w kazdym skrypcie, ktory LUNAR-a tylko UZYWA (ensemble,
-self-ensemble, fusion-level, robustness itd.).
-
-Powod: strojenie (Optuna, 200 prob) jest kosztowne i powinno sie odbyc
-DOKLADNIE RAZ na (dataset, run_index) - w run_single_experiment.py. Wszystkie
-pozostale skrypty, ktore LACZA LUNAR-a z czyms innym albo analizuja jego
-zachowanie (self-ensemble, fuzja, odpornosc), powinny reuzywac te same,
-juz znalezione hiperparametry - nie szukac ich na nowo za kazdym razem.
-
-Wymaga, zeby run_single_experiment.py zostal juz uruchomiony dla danego
-(dataset, run_index) - w przeciwnym razie rzuca czytelny blad z instrukcja
-co odpalic.
-"""
+# modul do wczytywania JUZ DOSTROJONYCH hiperparametrow LUNAR-a z wyniku run_single_experiment.py 
 
 import json
 from pathlib import Path

@@ -11,10 +11,9 @@ LUNAR+baseline (tune_meta_fusion) - self-ensemble uzywa stalej strategii
 bagging (patrz uzasadnienie kosztowe w poprzedniej wersji docstringu).
 
 WYMAGA wczesniej uruchomionych: run_single_experiment.py,
-run_isolation_forest.py / run_lof.py / run_ocsvm.py / run_dbscan.py dla
+run_isolation_forest.py / run_lof.py / run_ocsvm.py dla
 tego samego (dataset, run_index).
 
-Nie modyfikuje LUNAR.py, utils.py ani variables.py.
 """
 
 import sys
@@ -61,9 +60,9 @@ FEATURE_DROPOUT_LEVELS = [0.0, 0.10, 0.30]
 ROBUSTNESS_SELF_ENSEMBLE_N_INSTANCES = 3
 
 RUN_CONFIGS = {
-    1: dict(run_index=1, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run1"),
-    2: dict(run_index=2, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run2"),
-    3: dict(run_index=3, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run3"),
+    1: dict(run_index=1, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run1"),
+    2: dict(run_index=2, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run2"),
+    3: dict(run_index=3, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run3"),
 }
 
 

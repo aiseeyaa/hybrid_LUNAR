@@ -3,12 +3,12 @@ CO TU ROBIMY:
 Wspolny modul pomocniczy uzywany przez eksperymenty laczace LUNAR-a z
 klasycznymi modelami (ensemble, LUNAR+best baseline, porownanie poziomow
 fuzji, analiza odpornosci). Zamiast tunowac IsolationForest / LOF /
-OneClassSVM / DBSCAN OD NOWA w kazdym skrypcie, WCZYTUJE juz zapisane wyniki
+OneClassSVM OD NOWA w kazdym skrypcie, WCZYTUJE juz zapisane wyniki
 solo-baseline'ow (eksperymenty 02-05) - tak samo jak lunar_params_loading.py
 robi to dla LUNAR-a.
 
-Wymaga, zeby run_isolation_forest.py / run_lof.py / run_ocsvm.py /
-run_dbscan.py zostaly juz uruchomione dla danego (dataset, run_index) -
+Wymaga, zeby run_isolation_forest.py / run_lof.py / run_ocsvm.py
+zostaly juz uruchomione dla danego (dataset, run_index) -
 w przeciwnym razie rzuca czytelny blad z instrukcja co odpalic.
 """
 
@@ -16,13 +16,13 @@ import json
 from pathlib import Path
 
 from results import ordinal_label
-from ensemble_utils import score_if, score_lof, score_ocsvm, score_dbscan
+from ensemble_utils import score_if, score_lof, score_ocsvm
 
-BASELINE_MODEL_TYPES = ["IsolationForest", "LOF", "OneClassSVM", "DBSCAN"]
+BASELINE_MODEL_TYPES = ["IsolationForest", "LOF", "OneClassSVM"]
 
 # Ujednolicony rejestr: scorer ma zawsze sygnature
 # (params, train_x, val_x, test_x, seed) -> (scores_val, scores_test, runtime_train, runtime_inference)
-# nawet jesli dany model nie potrzebuje seeda (np. LOF, OCSVM, DBSCAN) - to
+# nawet jesli dany model nie potrzebuje seeda (np. LOF, OCSVM) - to
 # ujednolica wywolania we wszystkich skryptach.
 BASELINE_REGISTRY = {
     "IsolationForest": {
@@ -33,9 +33,6 @@ BASELINE_REGISTRY = {
     },
     "OneClassSVM": {
         "scorer": lambda params, train_x, val_x, test_x, seed: score_ocsvm(params, train_x, val_x, test_x),
-    },
-    "DBSCAN": {
-        "scorer": lambda params, train_x, val_x, test_x, seed: score_dbscan(params, train_x, val_x, test_x),
     },
 }
 
@@ -55,7 +52,7 @@ def load_baseline_params(results_dir, run_index, model_type, dataset):
         raise FileNotFoundError(
             f"Brak wynikow solo {model_type} dla dataset={dataset}, run_index={run_index}. "
             f"Najpierw uruchom odpowiedni skrypt solo (run_isolation_forest.py / run_lof.py / "
-            f"run_ocsvm.py / run_dbscan.py) dla tego datasetu i run_index."
+            f"run_ocsvm.py) dla tego datasetu i run_index."
         )
     return rec["hyperparameters"]
 
@@ -80,8 +77,7 @@ def select_best_baseline(results_dir, run_index, dataset, metric="F1"):
     if not found:
         raise FileNotFoundError(
             f"Brak wynikow solo-baseline dla dataset={dataset}, run_index={run_index}. "
-            f"Najpierw uruchom: run_isolation_forest.py, run_lof.py, run_ocsvm.py, "
-            f"run_dbscan.py dla tego datasetu i run_index."
+            f"Najpierw uruchom: run_isolation_forest.py, run_lof.py, run_ocsvm.py dla tego datasetu i run_index."
         )
 
     best_model_type = max(found, key=lambda mt: found[mt][metric])

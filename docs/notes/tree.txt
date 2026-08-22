@@ -1,0 +1,30 @@
+Folder PATH listing
+Volume serial number is 0000002E 4C82:1B4B
+C:.
++���data
+-   +���processed
+-   -   L���old
+-   +���raw
+-   L���sample
++���docs
+-   L���notes
++���experiments
+-   +���logs
+-   L���saved_models
+-       +���CICIDS
+-       L���UNSW_NB15
++���external
+-   L���LUNAR
++���figures
++���models
+-   +���IsolationForest
+-   +���LOF
+-   +���LUNAR
+-   -   +���CICIDS
+-   -   L���UNSW_NB15
+-   L���OneClassSVM
++���notebooks
++���results
+-   +���aggregation
+-   -   L���notebook_figs
++���src

@@ -1,0 +1,18 @@
+\begin{table}[H]
+\centering
+\caption{Wyniki modeli pojedynczych dla UNSW-NB15 w~wariancie standardowego progu; średnia $\pm$ odchylenie standardowe z~trzech uruchomień}
+\label{tab:solo_unsw}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{lccccc}
+\hline
+Model & ROC AUC & PR AUC & Precision & Recall & $F_1$ \\
+\hline
+Isolation Forest & $0{,}845 \pm 0{,}001$ & $0{,}885 \pm 0{,}004$ & $0{,}781 \pm 0{,}005$ & $0{,}814 \pm 0{,}003$ & $0{,}797 \pm 0{,}004$ \\
+LOF & $0{,}889 \pm 0{,}004$ & $0{,}920 \pm 0{,}003$ & $0{,}849 \pm 0{,}010$ & $0{,}805 \pm 0{,}006$ & $0{,}826 \pm 0{,}001$ \\
+LUNAR & $0{,}889 \pm 0{,}005$ & \textbf{$0{,}930 \pm 0{,}002$} & \textbf{$0{,}896 \pm 0{,}006$} & $0{,}790 \pm 0{,}002$ & \textbf{$0{,}839 \pm 0{,}002$} \\
+OneClassSVM & $0{,}818 \pm 0{,}002$ & $0{,}850 \pm 0{,}003$ & $0{,}810 \pm 0{,}019$ & $0{,}762 \pm 0{,}015$ & $0{,}785 \pm 0{,}001$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+Źródło: opracowanie własne.

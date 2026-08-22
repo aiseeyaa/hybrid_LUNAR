@@ -1,20 +1,11 @@
 """
-Shared helper for the three-threshold-variant reporting protocol requested
-in the review (31.07.2026 feedback):
-
-  1. "standard"         -> maximize F1 (as before)
-  2. "recall_oriented"  -> maximize F-beta with beta>1 (favors recall)
+  1. "standard"         -> maximize F1
+  2. "recall_oriented"  -> maximize F-beta with beta>1 (for better recall)
   3. "operational"      -> fix a minimum acceptable recall, then maximize precision
 
-All three thresholds are selected exclusively on the calibration split
+All three thresholds are selected on the calibration split
 (val_calib, returned by data.make_final_subsample) and then frozen and
-applied, unmodified, to the held-out test set. This keeps threshold
-selection and final evaluation on disjoint data, and applies an identical
-protocol across every model_type so comparisons between LUNAR, the solo
-baselines, and the ensembles are apples-to-apples.
-
-This module intentionally does not touch LUNAR.py, utils.py or
-variables.py -- it only orchestrates calls into metrics.py.
+applied unmodified to test set. 
 """
 
 from metrics import (

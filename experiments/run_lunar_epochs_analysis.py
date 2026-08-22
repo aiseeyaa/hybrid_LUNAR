@@ -1,20 +1,5 @@
-"""
-CO TU ROBIMY (BEZ WLASNEGO TUNINGU BAZOWYCH HIPERPARAMETROW):
-Sprawdzamy wrazliwosc LUNAR-a na liczbe epok treningu (siatka 25-300),
-trzymajac WSZYSTKIE inne hiperparametry (k, samples, lr, wd, epsilon,
-proportion) na poziomie juz dostrojonym w run_single_experiment.py.
+# wrazliwosc LUNAR-a na liczbe epok treningu (siatka 25-300)
 
-ZMIANA: nie tunujemy juz osobno "bazowego" LUNAR-a - wczytujemy jego
-hiperparametry z run_single_experiment.py i zmieniamy TYLKO n_epochs w
-petli. To jest czystsza ablacja (jedna zmienna na raz) niz wczesniejsza
-wersja, ktora tunowala wlasny, oddzielny "best_base" niezaleznie od
-run_single_experiment.py.
-
-WYMAGA wczesniej uruchomionego: run_single_experiment.py dla tego samego
-(dataset, run_index).
-
-Nie modyfikuje LUNAR.py, utils.py ani variables.py.
-"""
 
 import sys
 import gc
@@ -55,9 +40,9 @@ FBETA = 2.0
 NORMAL_Q = 0.99
 
 RUN_CONFIGS = {
-    1: dict(run_index=1, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run1"),
-    2: dict(run_index=2, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run2"),
-    3: dict(run_index=3, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run3"),
+    1: dict(run_index=1, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run1"),
+    2: dict(run_index=2, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run2"),
+    3: dict(run_index=3, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run3"),
 }
 
 

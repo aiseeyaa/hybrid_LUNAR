@@ -51,20 +51,6 @@ RUN_CONFIGS = {
         ),
     }
 
-
-# ---------------------------------------------------------------------------
-# NOTE on OneClassSVM:
-# OneClassSVM natively supports .fit() on training data and .score_samples()
-# / .decision_function() on unseen points, so no scoring workaround is
-# needed (unlike DBSCAN). Higher decision_function value = more "normal";
-# we negate it so that, consistent with every other model in this suite,
-# a HIGHER score means MORE anomalous.
-# Training cost scales roughly quadratically with n_samples for the RBF
-# kernel, so the optuna search subsamples stay small and the final
-# subsample train size may need capping on very large datasets.
-# ---------------------------------------------------------------------------
-
-
 def cleanup_memory():
     gc.collect()
 

@@ -1,21 +1,4 @@
-"""
-CO TU ROBIMY (Eksperyment 2 z drabiny ablacyjnej, BEZ WLASNEGO TUNINGU):
-Grupa kontrolna: laczymy w jeden ensemble WYLACZNIE klasyczne detektory
-(IsolationForest, LOF, OneClassSVM, DBSCAN) - BEZ LUNAR-a - przy uzyciu 5
-strategii fuzji score-level.
-
-ZMIANA: ten skrypt NIE TUNUJE JUZ klasycznych modeli od nowa. Wczytuje ich
-hiperparametry z juz zapisanych wynikow solo (run_isolation_forest.py,
-run_lof.py, run_ocsvm.py, run_dbscan.py) przez baseline_selection.py.
-Jedyne "nowe" tunowanie w tym skrypcie to dobor strategii fuzji
-(tune_meta_fusion) - to jest jedyny nowy element, ktorego nie da sie
-wziac z zadnego wczesniejszego eksperymentu.
-
-WYMAGA wczesniej uruchomionych: run_isolation_forest.py, run_lof.py,
-run_ocsvm.py, run_dbscan.py dla tego samego (dataset, run_index).
-
-Nie modyfikuje LUNAR.py, utils.py ani variables.py.
-"""
+#  jeden ensemble z LOF, IF, OneClassSVM BEZ LUNAR-a - przy uzyciu 5 strategii fuzji score-level
 
 import sys
 import gc
@@ -52,9 +35,9 @@ FBETA = 2.0
 NORMAL_Q = 0.99
 
 RUN_CONFIGS = {
-    1: dict(run_index=1, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run1"),
-    2: dict(run_index=2, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run2"),
-    3: dict(run_index=3, n_train_final=154000, n_val_final=66000, n_test_final=100000, notes="run3"),
+    1: dict(run_index=1, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run1"),
+    2: dict(run_index=2, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run2"),
+    3: dict(run_index=3, n_train_final=40000, n_val_final=12000, n_test_final=80000, notes="run3"),
 }
 
 
@@ -74,11 +57,9 @@ def run_experiment(dataset, run_cfg, best_params):
         best_params["LOF"], train_x, val_x, test_x, SEED)
     ocsvm_val, ocsvm_test, tr_ocsvm, inf_ocsvm = BASELINE_REGISTRY["OneClassSVM"]["scorer"](
         best_params["OneClassSVM"], train_x, val_x, test_x, SEED)
-    dbscan_val, dbscan_test, tr_dbscan, inf_dbscan = BASELINE_REGISTRY["DBSCAN"]["scorer"](
-        best_params["DBSCAN"], train_x, val_x, test_x, SEED)
 
-    val_matrix = np.column_stack([if_val, lof_val, ocsvm_val, dbscan_val])
-    test_matrix = np.column_stack([if_test, lof_test, ocsvm_test, dbscan_test])
+    val_matrix = np.column_stack([if_val, lof_val, ocsvm_val])
+    test_matrix = np.column_stack([if_test, lof_test, ocsvm_test])
 
     best_meta = tune_meta_fusion(val_matrix, val_y, SEED, META_TRIALS, RESULTS_DIR, FUSION_STRATEGIES)
     fused_val, fused_test = apply_meta_fusion(best_meta, val_matrix, test_matrix, val_y, SEED)
@@ -95,8 +76,8 @@ def run_experiment(dataset, run_cfg, best_params):
 
     result_bundle = {
         "metrics": metrics,
-        "runtime_train": tr_if + tr_lof + tr_ocsvm + tr_dbscan,
-        "runtime_inference": inf_if + inf_lof + inf_ocsvm + inf_dbscan,
+        "runtime_train": tr_if + tr_lof + tr_ocsvm,
+        "runtime_inference": inf_if + inf_lof + inf_ocsvm,
         "threshold_info": threshold_info,
         "threshold_variants": threshold_variants,
         "pr_curve": pr_curve,
