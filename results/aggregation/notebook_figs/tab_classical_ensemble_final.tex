@@ -1,0 +1,23 @@
+\begin{table}[H]
+\centering
+\caption{Porównanie zespołu klasycznego z modelami pojedynczymi przy standardowym progu decyzyjnym. Wartości podano jako średnia $\pm$ odchylenie standardowe z trzech uruchomień.}
+\label{tab:classical-ensemble-final}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccccc}
+\hline
+Zbiór & Model & ROC AUC & PR AUC & Precision & Recall & F1 \\
+\hline
+CICIDS 2017 & Isolation Forest & $0{,}819 \pm 0{,}009$ & $0{,}608 \pm 0{,}010$ & $0{,}712 \pm 0{,}200$ & $0{,}501 \pm 0{,}168$ & $0{,}551 \pm 0{,}016$ \\
+CICIDS 2017 & LOF & $0{,}848 \pm 0{,}008$ & $0{,}543 \pm 0{,}039$ & $0{,}583 \pm 0{,}005$ & $0{,}766 \pm 0{,}069$ & $0{,}662 \pm 0{,}026$ \\
+CICIDS 2017 & One-Class SVM & $0{,}768 \pm 0{,}001$ & $0{,}623 \pm 0{,}000$ & $0{,}243 \pm 0{,}000$ & ${\mathbf{1{,}000 \pm 0{,}000}}$ & $0{,}391 \pm 0{,}000$ \\
+CICIDS 2017 & Zespół klasyczny & ${\mathbf{0{,}882 \pm 0{,}002}}$ & ${\mathbf{0{,}730 \pm 0{,}015}}$ & $0{,}710 \pm 0{,}020$ & $0{,}736 \pm 0{,}024$ & ${\mathbf{0{,}722 \pm 0{,}003}}$ \\
+\hline
+UNSW-NB15 & Isolation Forest & $0{,}845 \pm 0{,}001$ & $0{,}885 \pm 0{,}004$ & $0{,}781 \pm 0{,}005$ & $0{,}814 \pm 0{,}003$ & $0{,}797 \pm 0{,}004$ \\
+UNSW-NB15 & LOF & ${\mathbf{0{,}889 \pm 0{,}004}}$ & ${\mathbf{0{,}920 \pm 0{,}003}}$ & $0{,}849 \pm 0{,}010$ & $0{,}805 \pm 0{,}006$ & ${\mathbf{0{,}826 \pm 0{,}001}}$ \\
+UNSW-NB15 & One-Class SVM & $0{,}818 \pm 0{,}002$ & $0{,}850 \pm 0{,}003$ & $0{,}810 \pm 0{,}019$ & $0{,}762 \pm 0{,}015$ & $0{,}785 \pm 0{,}001$ \\
+UNSW-NB15 & Zespół klasyczny & $0{,}875 \pm 0{,}001$ & $0{,}910 \pm 0{,}000$ & $0{,}834 \pm 0{,}008$ & $0{,}781 \pm 0{,}014$ & $0{,}806 \pm 0{,}004$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+Źródło: opracowanie własne.

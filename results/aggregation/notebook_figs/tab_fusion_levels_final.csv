@@ -1,0 +1,9 @@
+Zbiór,Wariant,AUC_ROC,AUC_PR,Precision,Recall,F1
+CICIDS 2017,Fuzja cech,0.960 ± 0.000,0.882 ± 0.002,0.794 ± 0.001,0.842 ± 0.010,0.817 ± 0.005
+CICIDS 2017,Fuzja wyników,0.894 ± 0.004,0.683 ± 0.016,0.696 ± 0.046,0.840 ± 0.029,0.760 ± 0.017
+CICIDS 2017,Decyzja AND,--,--,--,--,--
+CICIDS 2017,Decyzja OR,--,--,--,--,--
+UNSW-NB15,Fuzja cech,0.950 ± 0.004,0.963 ± 0.002,0.811 ± 0.003,0.923 ± 0.018,0.863 ± 0.008
+UNSW-NB15,Fuzja wyników,0.904 ± 0.004,0.933 ± 0.002,0.834 ± 0.073,0.809 ± 0.055,0.818 ± 0.004
+UNSW-NB15,Decyzja AND,--,--,--,--,--
+UNSW-NB15,Decyzja OR,--,--,--,--,--

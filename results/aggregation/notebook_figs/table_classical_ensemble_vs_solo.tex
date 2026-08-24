@@ -1,18 +1,23 @@
-\begin{table}
-\caption{Porownanie zespolu klasycznych modeli z modelami pojedynczymi przy progu standardowym.}
+\begin{table}[H]
+\centering
+\caption{Porównanie zespołu klasycznych modeli z modelami pojedynczymi przy~progu standardowym}
 \label{tab:classical_ensemble_vs_solo}
-\begin{tabular}{lllllll}
-\toprule
-Zbior & Model & ROC AUC & PR AUC & Precision & Recall & F1 \\
-\midrule
-CICIDS 2017 & Isolation Forest & 0.819 +/- 0.009 & 0.608 +/- 0.010 & 0.712 +/- 0.200 & 0.501 +/- 0.168 & 0.551 +/- 0.016 \\
-CICIDS 2017 & LOF & 0.848 +/- 0.008 & 0.543 +/- 0.039 & 0.583 +/- 0.005 & 0.766 +/- 0.069 & 0.662 +/- 0.026 \\
-CICIDS 2017 & OneClassSVM & 0.768 +/- 0.001 & 0.623 +/- 0.000 & 0.243 +/- 0.000 & 1.000 +/- 0.000 & 0.391 +/- 0.000 \\
-CICIDS 2017 & Zespol klasyczny & 0.882 +/- 0.002 & 0.730 +/- 0.015 & 0.710 +/- 0.020 & 0.736 +/- 0.024 & 0.722 +/- 0.003 \\
-UNSW-NB15 & Isolation Forest & 0.845 +/- 0.001 & 0.885 +/- 0.004 & 0.781 +/- 0.005 & 0.814 +/- 0.003 & 0.797 +/- 0.004 \\
-UNSW-NB15 & LOF & 0.889 +/- 0.004 & 0.920 +/- 0.003 & 0.849 +/- 0.010 & 0.805 +/- 0.006 & 0.826 +/- 0.001 \\
-UNSW-NB15 & OneClassSVM & 0.818 +/- 0.002 & 0.850 +/- 0.003 & 0.810 +/- 0.019 & 0.762 +/- 0.015 & 0.785 +/- 0.001 \\
-UNSW-NB15 & Zespol klasyczny & 0.875 +/- 0.001 & 0.910 +/- 0.000 & 0.834 +/- 0.008 & 0.781 +/- 0.014 & 0.806 +/- 0.004 \\
-\bottomrule
-\end{tabular}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccccc}
+\hline
+Zbiór & Model & ROC AUC & PR AUC & Precision & Recall & $F_1$ \\
+\hline
+CICIDS 2017 & Isolation Forest & $0{,}819 \pm 0{,}009$ & $0{,}608 \pm 0{,}010$ & $0{,}712 \pm 0{,}200$ & $0{,}501 \pm 0{,}168$ & $0{,}551 \pm 0{,}016$ \\
+CICIDS 2017 & LOF & $0{,}848 \pm 0{,}008$ & $0{,}543 \pm 0{,}039$ & $0{,}583 \pm 0{,}005$ & $0{,}766 \pm 0{,}069$ & $0{,}662 \pm 0{,}026$ \\
+CICIDS 2017 & OneClassSVM & $0{,}768 \pm 0{,}001$ & $0{,}623 \pm 0{,}000$ & $0{,}243 \pm 0{,}000$ & \textbf{$1{,}000$} & $0{,}391 \pm 0{,}000$ \\
+CICIDS 2017 & Zespół klasyczny & \textbf{$0{,}882 \pm 0{,}002$} & \textbf{$0{,}730 \pm 0{,}015$} & $0{,}710 \pm 0{,}020$ & $0{,}736 \pm 0{,}024$ & \textbf{$0{,}722 \pm 0{,}003$} \\
+\hline
+UNSW-NB15 & Isolation Forest & $0{,}845 \pm 0{,}001$ & $0{,}885 \pm 0{,}004$ & $0{,}781 \pm 0{,}005$ & $0{,}814 \pm 0{,}003$ & $0{,}797 \pm 0{,}004$ \\
+UNSW-NB15 & LOF & \textbf{$0{,}889 \pm 0{,}004$} & \textbf{$0{,}920 \pm 0{,}003$} & $0{,}849 \pm 0{,}010$ & $0{,}805 \pm 0{,}006$ & \textbf{$0{,}826 \pm 0{,}001$} \\
+UNSW-NB15 & OneClassSVM & $0{,}818 \pm 0{,}002$ & $0{,}850 \pm 0{,}003$ & $0{,}810 \pm 0{,}019$ & $0{,}762 \pm 0{,}015$ & $0{,}785 \pm 0{,}001$ \\
+UNSW-NB15 & Zespół klasyczny & $0{,}875 \pm 0{,}001$ & $0{,}910 \pm 0{,}000$ & $0{,}834 \pm 0{,}008$ & $0{,}781 \pm 0{,}014$ & $0{,}806 \pm 0{,}004$ \\
+\hline
+\end{tabular}}
 \end{table}
+
+Źródło: opracowanie własne.
