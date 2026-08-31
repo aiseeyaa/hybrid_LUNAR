@@ -1,0 +1,78 @@
+{
+  "experiment_id": "602755ed-bf6b-4df5-b169-ebc6970935f6",
+  "dataset_name": "CICIDS",
+  "dataset_version": "v1",
+  "split_method": "stratified_train_val_test_fixed_seed",
+  "seed": 81,
+  "preprocessing_version": "v1",
+  "model_type": "OneClassSVM",
+  "fusion_strategy": "none",
+  "hyperparameters": {
+    "kernel": "rbf",
+    "nu": 0.010023997839149094,
+    "gamma": "auto"
+  },
+  "threshold": 0.15726852939853064,
+  "threshold_info": {
+    "candidates": {
+      "f1_max": {
+        "threshold": 0.15726852939853064,
+        "score_name": "F1",
+        "score_value": 0.558990848379916,
+        "precision": 0.4362934362934363,
+        "recall": 0.7777013076393668
+      },
+      "f2_max": {
+        "threshold": 0.12676391263144807,
+        "score_name": "F2",
+        "score_value": 0.7121771217712177,
+        "precision": 0.36781922134494965,
+        "recall": 0.9298004129387474
+      },
+      "normal_q_0.99": {
+        "threshold": 0.27147973270470616,
+        "score_name": "F1",
+        "score_value": 0.45435791645177925,
+        "precision": 0.9063786008230452,
+        "recall": 0.30316586373021337
+      },
+      "operational": {
+        "threshold": 0.13202446566325232,
+        "score_name": "Precision@MinRecall",
+        "score_value": 0.37115707098937956,
+        "precision": 0.37115707098937956,
+        "recall": 0.9139710942876806,
+        "min_recall_target": 0.9,
+        "recall_floor_met": true
+      }
+    },
+    "chosen": {
+      "selection_method": "validation_f1_max",
+      "threshold": 0.15726852939853064,
+      "score_name": "F1",
+      "score_value": 0.558990848379916,
+      "precision": 0.4362934362934363,
+      "recall": 0.7777013076393668
+    }
+  },
+  "model_path": "C:\\Users\\aisia\\Desktop\\Meisterst\u00fcck\\mgr inz\\ver1004\\hybrid_LUNAR\\models\\seed_81\\OneClassSVM\\CICIDS_run1.joblib",
+  "AUC_ROC": 0.7676287748593423,
+  "AUC_PR": 0.6202084058375764,
+  "Precision": 0.4262337143997491,
+  "Recall": 0.7717840181705554,
+  "F1": 0.5491744568311631,
+  "ConfusionMatrix": [
+    [
+      40502,
+      20126
+    ],
+    [
+      4421,
+      14951
+    ]
+  ],
+  "Recall_at_FPR_0.01": 0.30342762750361346,
+  "Precision_at_Recall_0.80": 0.37033991228070173,
+  "runtime_train": 0.8879570960998535,
+  "runtime_inference": 1.7139570713043213
+}
