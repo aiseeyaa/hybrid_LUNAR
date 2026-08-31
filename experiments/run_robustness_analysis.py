@@ -1,19 +1,5 @@
 """
-CO TU ROBIMY (Eksperyment 7 z drabiny ablacyjnej, BEZ WLASNEGO TUNINGU):
-Sprawdzamy odpornosc dwoch sposobow laczenia LUNAR-a (z najlepszym
-klasycznym baseline'em ORAZ jako self-ensemble bagging) na trzy czynniki
-zaklocajace: szum, niezbalansowanie w tescie, feature dropout.
-
-ZMIANA: hiperparametry LUNAR-a wczytujemy z run_single_experiment.py, a
-hiperparametry klasycznego baseline'u z jego solo-wyniku. Nic tu nie jest
-tunowane od nowa poza doborem strategii fuzji score-level dla pary
-LUNAR+baseline (tune_meta_fusion) - self-ensemble uzywa stalej strategii
-bagging (patrz uzasadnienie kosztowe w poprzedniej wersji docstringu).
-
-WYMAGA wczesniej uruchomionych: run_single_experiment.py,
-run_isolation_forest.py / run_lof.py / run_ocsvm.py dla
-tego samego (dataset, run_index).
-
+Badanie odpornosci dwoch sposobow laczenia LUNAR-a (z najlepszym klasycznym baseline'em ORAZ jako self-ensemble bagging) na trzy czynniki zaklocajace: szum, niezbalansowanie w tescie, feature dropout.
 """
 
 import sys
@@ -27,8 +13,7 @@ import optuna
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "src"
 EXTERNAL_LUNAR_DIR = ROOT / "external" / "LUNAR"
-RESULTS_DIR = ROOT / "results"
-MODELS_DIR = ROOT / "models"
+
 
 sys.path.append(str(SRC_DIR))
 sys.path.append(str(EXTERNAL_LUNAR_DIR))
@@ -42,7 +27,9 @@ from baseline_selection import select_best_baseline, BASELINE_REGISTRY
 from lunar_params_loading import load_lunar_params
 from self_ensemble_builders import build_self_ensemble, fit_lunar_instance, cleanup_memory
 
-SEED = 29
+SEED = 81
+RESULTS_DIR = ROOT / "results" / f"seed_{SEED}"   
+MODELS_DIR = ROOT / "models" / f"seed_{SEED}" 
 META_TRIALS = 80
 FUSION_STRATEGIES = ["mean", "max", "weighted", "rank_mean", "stacking_lr"]
 DATASET_VERSION = "v1"

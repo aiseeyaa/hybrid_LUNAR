@@ -11,8 +11,7 @@ import torch
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "src"
 EXTERNAL_LUNAR_DIR = ROOT / "external" / "LUNAR"
-RESULTS_DIR = ROOT / "results"
-MODELS_DIR = ROOT / "models"
+
 
 sys.path.append(str(SRC_DIR))
 sys.path.append(str(EXTERNAL_LUNAR_DIR))
@@ -27,7 +26,9 @@ import LUNAR
 import variables as var
 from sklearn.metrics import roc_auc_score
 
-SEED = 29
+SEED = 81
+RESULTS_DIR = ROOT / "results" / f"seed_{SEED}"   
+MODELS_DIR = ROOT / "models" / f"seed_{SEED}" 
 N_TRIALS = 200
 SAMPLE_TYPES = ["UNIFORM", "SUBSPACE", "MIXED"]
 DATASET_VERSION = "v1"

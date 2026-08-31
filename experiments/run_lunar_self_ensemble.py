@@ -1,24 +1,5 @@
 """
-CO TU ROBIMY (Eksperyment 3 z drabiny ablacyjnej, BEZ WLASNEGO TUNINGU):
-Homogeniczny ensemble - kilka niezaleznych instancji TEGO SAMEGO LUNAR-a
-(bootstrapowe proby danych treningowych) laczonych 4 strategiami
-zespolowymi: bagging, boosting, voting, stacking.
-
-ZMIANA: bazowe hiperparametry LUNAR-a (k, samples, lr, wd, epsilon,
-proportion, n_epochs) wczytujemy z run_single_experiment.py zamiast
-tunowac je od nowa. Wszystkie instancje self-ensemble uzywaja TYCH SAMYCH
-hiperparametrow bazowych, roznia sie tylko probka treningowa i ziarnem
-losowym - dokladnie tak jak w prawdziwym baggingu/boostingu (tam tez
-architektura/hiperparametry sa ustalone, zmienia sie tylko dane).
-
-Logika budowania 4 strategii jest we wspolnym module
-self_ensemble_builders.py (reuzywany tez przez
-run_robustness_self_ensemble_probe.py).
-
-WYMAGA wczesniej uruchomionego: run_single_experiment.py dla tego samego
-(dataset, run_index).
-
-Nie modyfikuje LUNAR.py, utils.py ani variables.py.
+Homogeniczny ensemble - kilka niezaleznych instancji TEGO SAMEGO LUNAR-a laczonych 4 strategiami zespolowymi
 """
 
 import sys
@@ -31,8 +12,7 @@ import optuna
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "src"
 EXTERNAL_LUNAR_DIR = ROOT / "external" / "LUNAR"
-RESULTS_DIR = ROOT / "results"
-MODELS_DIR = ROOT / "models"
+
 
 sys.path.append(str(SRC_DIR))
 sys.path.append(str(EXTERNAL_LUNAR_DIR))
@@ -44,7 +24,9 @@ from threshold_reporting import calibrate_and_evaluate
 from lunar_params_loading import load_lunar_params
 from self_ensemble_builders import build_self_ensemble, cleanup_memory
 
-SEED = 29
+SEED = 81
+RESULTS_DIR = ROOT / "results" / f"seed_{SEED}"   
+MODELS_DIR = ROOT / "models" / f"seed_{SEED}" 
 N_INSTANCES = 5
 DATASET_VERSION = "v1"
 PREPROCESSING_VERSION = "v1"

@@ -9,8 +9,6 @@ import optuna
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "src"
-RESULTS_DIR = ROOT / "results"
-MODELS_DIR = ROOT / "models"
 
 sys.path.append(str(SRC_DIR))
 
@@ -22,7 +20,9 @@ from results import build_experiment_record, save_record_json
 from sklearn.neighbors import LocalOutlierFactor
 from sklearn.metrics import roc_auc_score
 
-SEED = 29
+SEED = 81
+RESULTS_DIR = ROOT / "results" / f"seed_{SEED}"   
+MODELS_DIR = ROOT / "models" / f"seed_{SEED}" 
 N_TRIALS = 200
 DATASET_VERSION = "v1"
 PREPROCESSING_VERSION = "v1"

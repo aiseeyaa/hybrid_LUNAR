@@ -14,8 +14,7 @@ import torch
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "src"
 EXTERNAL_LUNAR_DIR = ROOT / "external" / "LUNAR"
-RESULTS_DIR = ROOT / "results"
-MODELS_DIR = ROOT / "models"
+
 
 sys.path.append(str(SRC_DIR))
 sys.path.append(str(EXTERNAL_LUNAR_DIR))
@@ -31,7 +30,9 @@ from lunar_params_loading import load_lunar_params
 import LUNAR
 import variables as var
 
-SEED = 29
+SEED = 81
+RESULTS_DIR = ROOT / "results" / f"seed_{SEED}"   
+MODELS_DIR = ROOT / "models" / f"seed_{SEED}" 
 META_TRIALS = 80
 FUSION_STRATEGIES = ["mean", "max", "weighted", "rank_mean", "stacking_lr"]
 DATASET_VERSION = "v1"

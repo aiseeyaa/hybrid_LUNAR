@@ -1,22 +1,5 @@
-"""
-CO TU ROBIMY (BEZ WLASNEGO TUNINGU):
-Sparametryzowany, POJEDYNCZY punkt analizy odpornosci dla self-ensemble
-LUNAR-a (dowolna z 4 strategii, dowolny czynnik/wartosc zaklocenia).
+# punkt analizy odpornosci dla self-ensemble LUNAR-a
 
-ZMIANA: hiperparametry LUNAR-a wczytujemy z run_single_experiment.py, a
-(opcjonalnie, przy --compare_baseline) hiperparametry klasycznego
-baseline'u z jego solo-wyniku. Jedyne tunowanie w tym skrypcie to (przy
---compare_baseline) dobor strategii fuzji dla pary LUNAR+baseline.
-
-Przyklady uzycia:
-  python run_robustness_self_ensemble_probe.py CICIDS 1 --factor noise --value 0.15 --strategy boosting
-  python run_robustness_self_ensemble_probe.py CICIDS 1 --factor feature_dropout --value 0.30 --strategy stacking --n_instances 7 --compare_baseline
-
-WYMAGA wczesniej uruchomionego: run_single_experiment.py (zawsze), oraz
-run_isolation_forest.py / run_lof.py / run_ocsvm.py (tylko
-jesli podano --compare_baseline).
-
-"""
 
 import sys
 import argparse
@@ -28,8 +11,7 @@ import optuna
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "src"
 EXTERNAL_LUNAR_DIR = ROOT / "external" / "LUNAR"
-RESULTS_DIR = ROOT / "results"
-MODELS_DIR = ROOT / "models"
+
 
 sys.path.append(str(SRC_DIR))
 sys.path.append(str(EXTERNAL_LUNAR_DIR))
@@ -43,7 +25,9 @@ from baseline_selection import select_best_baseline, BASELINE_REGISTRY
 from lunar_params_loading import load_lunar_params
 from self_ensemble_builders import build_self_ensemble, fit_lunar_instance, cleanup_memory
 
-SEED = 29
+SEED = 81
+RESULTS_DIR = ROOT / "results" / f"seed_{SEED}"   
+MODELS_DIR = ROOT / "models" / f"seed_{SEED}" 
 META_TRIALS = 80
 FUSION_STRATEGIES = ["mean", "max", "weighted", "rank_mean", "stacking_lr"]
 DATASET_VERSION = "v1"

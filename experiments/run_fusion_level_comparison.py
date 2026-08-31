@@ -16,8 +16,7 @@ from sklearn.linear_model import LogisticRegression
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "src"
 EXTERNAL_LUNAR_DIR = ROOT / "external" / "LUNAR"
-RESULTS_DIR = ROOT / "results"
-MODELS_DIR = ROOT / "models"
+
 
 sys.path.append(str(SRC_DIR))
 sys.path.append(str(EXTERNAL_LUNAR_DIR))
@@ -35,7 +34,9 @@ from lunar_params_loading import load_lunar_params
 import LUNAR
 import variables as var
 
-SEED = 29
+SEED = 81
+RESULTS_DIR = ROOT / "results" / f"seed_{SEED}"   
+MODELS_DIR = ROOT / "models" / f"seed_{SEED}" 
 META_TRIALS = 80
 FUSION_STRATEGIES = ["mean", "max", "weighted", "rank_mean", "stacking_lr"]
 DATASET_VERSION = "v1"
@@ -62,7 +63,7 @@ def cleanup_memory():
         pass
 
 
-def score_lunar(params, dataset, train_x, train_y, val_x, val_y, test_x, test_y):
+def score_lunar(params, dataset, seed, train_x, train_y, val_x, val_y, test_x, test_y):
     var.lr = params["lr"]; var.wd = params["wd"]; var.epsilon = params["epsilon"]
     var.proportion = params["proportion"]; var.n_epochs = params["n_epochs"]
 
@@ -72,7 +73,7 @@ def score_lunar(params, dataset, train_x, train_y, val_x, val_y, test_x, test_y)
         t0 = time.time()
         out_val = LUNAR.run(
             train_x, train_y, val_x, val_y, val_x, val_y,
-            dataset, SEED, params["k"], params["samples"], train_new_model=True,
+            dataset, seed, params["k"], params["samples"], train_new_model=True,
         )
         runtime_train = time.time() - t0
         scores_val = minmax_scale_scores(out_val.numpy())
@@ -82,7 +83,7 @@ def score_lunar(params, dataset, train_x, train_y, val_x, val_y, test_x, test_y)
         t1 = time.time()
         out_test = LUNAR.run(
             train_x, train_y, val_x, val_y, test_x, test_y,
-            dataset, SEED, params["k"], params["samples"], train_new_model=False,
+            dataset, seed, params["k"], params["samples"], train_new_model=False,
         )
         runtime_inference = time.time() - t1
         scores_test = minmax_scale_scores(out_test.numpy())
@@ -92,64 +93,89 @@ def score_lunar(params, dataset, train_x, train_y, val_x, val_y, test_x, test_y)
         cleanup_memory()
 
 
-def run_experiment(dataset, run_cfg, lunar_params):
+def run_experiment(dataset, run_cfg, seed, lunar_params):
     run_index = run_cfg["run_index"]
 
-    best_model_type, best_record = select_best_baseline(RESULTS_DIR, run_index, dataset)
+    best_model_type, best_record = select_best_baseline(
+        RESULTS_DIR, run_index, dataset)
     best_baseline_params = best_record["hyperparameters"]
     baseline_scorer = BASELINE_REGISTRY[best_model_type]["scorer"]
 
     train_x, train_y, val_x, val_y, test_x, test_y = make_final_subsample(
-        dataset, SEED, run_cfg["n_train_final"], run_cfg["n_val_final"], run_cfg["n_test_final"],
+        dataset, seed, run_cfg["n_train_final"], run_cfg["n_val_final"], run_cfg["n_test_final"],
         max_nodes_budget=50_000_000, k=lunar_params["k"],
     )
 
     lunar_val, lunar_test, tr_lunar, inf_lunar = score_lunar(
-        lunar_params, dataset, train_x, train_y, val_x, val_y, test_x, test_y
+        lunar_params, dataset, seed, train_x, train_y, val_x, val_y, test_x, test_y
     )
     baseline_val, baseline_test, tr_base, inf_base = baseline_scorer(
-        best_baseline_params, train_x, val_x, test_x, SEED
+        best_baseline_params, train_x, val_x, test_x, seed
     )
     total_train_rt = tr_lunar + tr_base
     total_inf_rt = inf_lunar + inf_base
 
     variant_results = {}
 
+    # SCORE-LEVEL
     val_matrix = np.column_stack([lunar_val, baseline_val])
     test_matrix = np.column_stack([lunar_test, baseline_test])
-    best_meta = tune_meta_fusion(val_matrix, val_y, SEED, META_TRIALS, RESULTS_DIR, FUSION_STRATEGIES)
-    fused_val, fused_test = apply_meta_fusion(best_meta, val_matrix, test_matrix, val_y, SEED)
+    best_meta = tune_meta_fusion(val_matrix, val_y, seed, META_TRIALS, RESULTS_DIR, FUSION_STRATEGIES)
+    fused_val, fused_test = apply_meta_fusion(best_meta, val_matrix, test_matrix, val_y, seed)
     variant_results["score_level"] = {
         "scores_val": fused_val, "scores_test": fused_test,
         "detail": {"fusion_strategy": best_meta["fusion_strategy"], "meta": best_meta},
     }
 
+    # DECISION-LEVEL
     thr_lunar, *_ = find_best_f1_threshold(val_y, lunar_val)
     thr_base, *_ = find_best_f1_threshold(val_y, baseline_val)
     lunar_val_bin = (lunar_val >= thr_lunar).astype(int)
     base_val_bin = (baseline_val >= thr_base).astype(int)
     lunar_test_bin = (lunar_test >= thr_lunar).astype(int)
     base_test_bin = (baseline_test >= thr_base).astype(int)
-    or_val = np.maximum(lunar_val_bin, base_val_bin).astype(float)
-    or_test = np.maximum(lunar_test_bin, base_test_bin).astype(float)
-    and_val = np.minimum(lunar_val_bin, base_val_bin).astype(float)
-    and_test = np.minimum(lunar_test_bin, base_test_bin).astype(float)
     variant_results["decision_level_OR"] = {
-        "scores_val": or_val, "scores_test": or_test,
+        "scores_val": np.maximum(lunar_val_bin, base_val_bin).astype(float),
+        "scores_test": np.maximum(lunar_test_bin, base_test_bin).astype(float),
         "detail": {"rule": "OR", "thr_lunar": float(thr_lunar), "thr_baseline": float(thr_base)},
     }
     variant_results["decision_level_AND"] = {
-        "scores_val": and_val, "scores_test": and_test,
+        "scores_val": np.minimum(lunar_val_bin, base_val_bin).astype(float),
+        "scores_test": np.minimum(lunar_test_bin, base_test_bin).astype(float),
         "detail": {"rule": "AND", "thr_lunar": float(thr_lunar), "thr_baseline": float(thr_base)},
     }
 
+    # FEATURE-LEVEL, TRZY WARIANTY
+    # 1) X only - baseline nadzorowanego klasyfikatora
+    clf_x_only = LogisticRegression(max_iter=3000, random_state=seed)
+    clf_x_only.fit(val_x, val_y)
+    variant_results["feature_level_X_only"] = {
+        "scores_val": clf_x_only.predict_proba(val_x)[:, 1],
+        "scores_test": clf_x_only.predict_proba(test_x)[:, 1],
+        "detail": {"classifier": "LogisticRegression", "features": "X (oryginalne cechy, bez score'ow anomalii)"},
+    }
+
+    # 2) X + LUNAR score
+    val_x_lunar = np.column_stack([val_x, lunar_val])
+    test_x_lunar = np.column_stack([test_x, lunar_test])
+    clf_x_lunar = LogisticRegression(max_iter=3000, random_state=seed)
+    clf_x_lunar.fit(val_x_lunar, val_y)
+    variant_results["feature_level_X_plus_lunar"] = {
+        "scores_val": clf_x_lunar.predict_proba(val_x_lunar)[:, 1],
+        "scores_test": clf_x_lunar.predict_proba(test_x_lunar)[:, 1],
+        "detail": {"classifier": "LogisticRegression", "features": "X + LUNAR_score (bez baseline'u klasycznego)"},
+    }
+
+    # 3) X + LUNAR + baseline - pelny wariant hybrydowy (jak wczesniej)
     val_aug = np.column_stack([val_x, lunar_val, baseline_val])
     test_aug = np.column_stack([test_x, lunar_test, baseline_test])
-    feat_clf = LogisticRegression(max_iter=3000, random_state=SEED)
-    feat_clf.fit(val_aug, val_y)
-    variant_results["feature_level"] = {
-        "scores_val": feat_clf.predict_proba(val_aug)[:, 1], "scores_test": feat_clf.predict_proba(test_aug)[:, 1],
-        "detail": {"classifier": "LogisticRegression", "note": "scores appended to original features"},
+    clf_full = LogisticRegression(max_iter=3000, random_state=seed)
+    clf_full.fit(val_aug, val_y)
+    variant_results["feature_level_X_plus_lunar_plus_baseline"] = {
+        "scores_val": clf_full.predict_proba(val_aug)[:, 1],
+        "scores_test": clf_full.predict_proba(test_aug)[:, 1],
+        "detail": {"classifier": "LogisticRegression",
+                    "features": f"X + LUNAR_score + {best_model_type}_score"},
     }
 
     saved_variants = {}
@@ -158,13 +184,15 @@ def run_experiment(dataset, run_cfg, lunar_params):
             val_y, payload["scores_val"], test_y, payload["scores_test"],
             beta=FBETA, normal_q=NORMAL_Q, min_recall=MIN_RECALL_TARGET,
         )
-        print_metrics(f"{MODEL_TYPE} [{level_name}] - {dataset} run{run_index} (LUNAR+{best_model_type})", metrics)
+        print_metrics(f"{MODEL_TYPE} [{level_name}] - {dataset} run{run_index} seed{seed} (LUNAR+{best_model_type})", metrics)
         saved_variants[level_name] = {
             "metrics": metrics, "threshold_info": threshold_info, "threshold_variants": threshold_variants,
             "pr_curve": pr_curve, "detail": payload["detail"],
         }
 
-    best_self_ensemble_strategy, self_ensemble_record = select_best_self_ensemble(RESULTS_DIR, run_index, dataset)
+    best_self_ensemble_strategy, self_ensemble_record = select_best_self_ensemble(
+        RESULTS_DIR, run_index, dataset
+    )
     saved_variants["lunar_self_ensemble"] = {
         "metrics": {
             "AUC_ROC": self_ensemble_record["AUC_ROC"], "AUC_PR": self_ensemble_record["AUC_PR"],
@@ -179,12 +207,9 @@ def run_experiment(dataset, run_cfg, lunar_params):
         "pr_curve": self_ensemble_record.get("pr_curve", []),
         "detail": {"source": "run_lunar_self_ensemble.py", "best_self_ensemble_strategy": best_self_ensemble_strategy},
     }
-    print_metrics(
-        f"{MODEL_TYPE} [lunar_self_ensemble={best_self_ensemble_strategy}] (REFERENCJA) - {dataset} run{run_index}",
-        saved_variants["lunar_self_ensemble"]["metrics"],
-    )
 
-    del train_x, train_y, val_x, val_y, test_x, test_y, val_matrix, test_matrix, val_aug, test_aug
+    del train_x, train_y, val_x, val_y, test_x, test_y, val_matrix, test_matrix
+    del val_x_lunar, test_x_lunar, val_aug, test_aug
     cleanup_memory()
     clear_dataset_cache()
 
@@ -195,13 +220,14 @@ def run_experiment(dataset, run_cfg, lunar_params):
     }
 
 
-def save_results(dataset, run_cfg, lunar_params, result_bundle):
+def save_results(dataset, run_cfg, seed, lunar_params, result_bundle):
     run_index = run_cfg["run_index"]
+    seed_for_filename = SEED
     saved = []
     for level_name, variant in result_bundle["variants"].items():
         is_reference = level_name == "lunar_self_ensemble"
         record = build_experiment_record(
-            dataset_name=dataset, dataset_version=DATASET_VERSION, split_method=SPLIT_METHOD, seed=SEED,
+            dataset_name=dataset, dataset_version=DATASET_VERSION, split_method=SPLIT_METHOD, seed=seed,
             preprocessing_version=PREPROCESSING_VERSION, model_type=MODEL_TYPE, fusion_strategy=level_name,
             hyperparameters=({
                 "lunar": lunar_params,
@@ -234,13 +260,15 @@ def main():
     optuna.logging.set_verbosity(optuna.logging.WARNING)
 
     run_cfg = RUN_CONFIGS[args.run_index]
-    lunar_params = load_lunar_params(RESULTS_DIR, args.run_index, args.dataset)
-    result_bundle = run_experiment(args.dataset, run_cfg, lunar_params)
-    saved = save_results(args.dataset, run_cfg, lunar_params, result_bundle)
+    lunar_params = load_lunar_params(
+        RESULTS_DIR, args.run_index, args.dataset)
+    result_bundle = run_experiment(args.dataset, run_cfg, SEED, lunar_params)
+    saved = save_results(args.dataset, run_cfg, SEED, lunar_params, result_bundle)
 
     best_f1 = max(r["F1"] for r in saved)
     best_name = max(saved, key=lambda r: r["F1"])["fusion_strategy"]
-    print(f"Finished {args.dataset} run {args.run_index}: {len(saved)} warianty, best F1={best_f1:.4f} ({best_name})")
+    print(f"Finished {args.dataset} run {args.run_index} seed {SEED}: "
+          f"{len(saved)} warianty, best F1={best_f1:.4f} ({best_name})")
 
 
 if __name__ == "__main__":

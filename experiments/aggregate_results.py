@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 
 ROOT = Path(__file__).resolve().parent.parent
-RESULTS_DIR = ROOT / "results"
-AGG_DIR = RESULTS_DIR / "aggregation"
+RESULTS_DIR = ROOT / "results" / "seed_81"
+AGG_DIR = RESULTS_DIR / "aggregation" / "seed_81"
 
 
 def load_records(results_dir):

@@ -10,8 +10,7 @@ import optuna
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC_DIR = ROOT / "src"
-RESULTS_DIR = ROOT / "results"
-MODELS_DIR = ROOT / "models"
+
 
 sys.path.append(str(SRC_DIR))
 
@@ -22,7 +21,9 @@ from threshold_reporting import calibrate_and_evaluate
 from baseline_selection import load_all_baseline_params, BASELINE_REGISTRY
 from ensemble_utils import tune_meta_fusion, apply_meta_fusion
 
-SEED = 29
+SEED = 81
+RESULTS_DIR = ROOT / "results" / f"seed_{SEED}"   
+MODELS_DIR = ROOT / "models" / f"seed_{SEED}" 
 META_TRIALS = 80
 FUSION_STRATEGIES = ["mean", "max", "weighted", "rank_mean", "stacking_lr"]
 DATASET_VERSION = "v1"
