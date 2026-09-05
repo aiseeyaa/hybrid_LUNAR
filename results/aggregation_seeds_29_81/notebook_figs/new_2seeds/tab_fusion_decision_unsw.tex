@@ -1,0 +1,20 @@
+\begin{table}[H]
+\centering
+\caption{Porównanie wariantów fuzji decyzji dla zbioru UNSW-NB15 przy standardowych progach modeli składowych. Dla każdego numeru runu wartości podano jako średnia $\pm$ odchylenie standardowe między seedami $29$ i~$81$. Warianty \textit{AND} i~\textit{OR} zwracają decyzje binarne, dlatego nie raportowano dla nich ROC AUC ani~PR AUC.}
+\label{tab:fusion-decision-unsw}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccccc}
+\hline
+Wariant & Run & Precision & Recall & F1 & FP & FN \\
+\hline
+Decyzja AND & 1 & $0{,}922 \pm 0{,}010$ & $0{,}745 \pm 0{,}006$ & $0{,}824 \pm 0{,}000$ & $2782{,}5 \pm 399{,}5$ & $11236{,}0 \pm 278{,}6$ \\
+Decyzja AND & 2 & $0{,}897 \pm 0{,}032$ & $0{,}763 \pm 0{,}023$ & $0{,}824 \pm 0{,}000$ & $3891{,}5 \pm 1454{,}5$ & $10453{,}0 \pm 1011{,}2$ \\
+Decyzja AND & 3 & $0{,}919 \pm 0{,}006$ & $0{,}746 \pm 0{,}003$ & $0{,}824 \pm 0{,}001$ & $2906{,}0 \pm 244{,}7$ & $11174{,}5 \pm 112{,}4$ \\
+Decyzja OR & 1 & $0{,}819 \pm 0{,}022$ & $0{,}864 \pm 0{,}018$ & $0{,}841 \pm 0{,}003$ & $8463{,}5 \pm 1443{,}2$ & $5986{,}0 \pm 800{,}4$ \\
+Decyzja OR & 2 & $0{,}748 \pm 0{,}125$ & $0{,}899 \pm 0{,}081$ & $0{,}810 \pm 0{,}041$ & $14485{,}5 \pm 10262{,}2$ & $4458{,}0 \pm 3578{,}0$ \\
+Decyzja OR & 3 & $0{,}831 \pm 0{,}009$ & $0{,}847 \pm 0{,}011$ & $0{,}839 \pm 0{,}001$ & $7592{,}0 \pm 572{,}8$ & $6729{,}5 \pm 484{,}4$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+Źródło: opracowanie własne.

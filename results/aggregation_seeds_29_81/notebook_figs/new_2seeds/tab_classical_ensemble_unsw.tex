@@ -1,0 +1,26 @@
+\begin{table}[H]
+\centering
+\caption{Porównanie zespołu klasycznego z~modelami pojedynczymi dla zbioru UNSW-NB15 przy standardowym progu decyzyjnym. Dla każdego numeru runu wartości podano jako średnia $\pm$ odchylenie standardowe między seedami $29$ i~$81$.}
+\label{tab:classical-ensemble-unsw}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccccc}
+\hline
+Model & Run & AUC_ROC & AUC_PR & Precision & Recall & F1 \\
+\hline
+Isolation Forest & 1 & $0{,}838 \pm 0{,}009$ & $0{,}883 \pm 0{,}010$ & $0{,}786 \pm 0{,}005$ & $0{,}797 \pm 0{,}020$ & $0{,}791 \pm 0{,}008$ \\
+Isolation Forest & 2 & $0{,}846 \pm 0{,}000$ & $0{,}885 \pm 0{,}003$ & $0{,}778 \pm 0{,}010$ & $0{,}817 \pm 0{,}001$ & $0{,}797 \pm 0{,}005$ \\
+Isolation Forest & 3 & $0{,}846 \pm 0{,}000$ & $0{,}886 \pm 0{,}006$ & $0{,}784 \pm 0{,}013$ & $0{,}798 \pm 0{,}022$ & $0{,}790 \pm 0{,}005$ \\
+LOF & 1 & $0{,}888 \pm 0{,}005$ & $0{,}921 \pm 0{,}005$ & $0{,}834 \pm 0{,}025$ & $0{,}818 \pm 0{,}021$ & $0{,}826 \pm 0{,}002$ \\
+LOF & 2 & $0{,}890 \pm 0{,}000$ & $0{,}924 \pm 0{,}000$ & $0{,}856 \pm 0{,}001$ & $0{,}800 \pm 0{,}003$ & $0{,}827 \pm 0{,}001$ \\
+LOF & 3 & $0{,}891 \pm 0{,}001$ & $0{,}922 \pm 0{,}003$ & $0{,}843 \pm 0{,}007$ & $0{,}808 \pm 0{,}005$ & $0{,}825 \pm 0{,}001$ \\
+One-Class SVM & 1 & $0{,}816 \pm 0{,}000$ & $0{,}847 \pm 0{,}001$ & $0{,}832 \pm 0{,}000$ & $0{,}746 \pm 0{,}001$ & $0{,}786 \pm 0{,}000$ \\
+One-Class SVM & 2 & $0{,}819 \pm 0{,}000$ & $0{,}853 \pm 0{,}000$ & $0{,}799 \pm 0{,}004$ & $0{,}770 \pm 0{,}004$ & $0{,}784 \pm 0{,}000$ \\
+One-Class SVM & 3 & $0{,}819 \pm 0{,}001$ & $0{,}852 \pm 0{,}002$ & $0{,}796 \pm 0{,}001$ & $0{,}773 \pm 0{,}000$ & $0{,}784 \pm 0{,}000$ \\
+Zespół klasyczny & 1 & $0{,}872 \pm 0{,}002$ & $0{,}908 \pm 0{,}002$ & $0{,}820 \pm 0{,}012$ & $0{,}787 \pm 0{,}005$ & $0{,}803 \pm 0{,}003$ \\
+Zespół klasyczny & 2 & $0{,}875 \pm 0{,}001$ & $0{,}910 \pm 0{,}001$ & $0{,}834 \pm 0{,}006$ & $0{,}784 \pm 0{,}013$ & $0{,}808 \pm 0{,}004$ \\
+Zespół klasyczny & 3 & $0{,}875 \pm 0{,}001$ & $0{,}911 \pm 0{,}000$ & $0{,}836 \pm 0{,}010$ & $0{,}772 \pm 0{,}009$ & $0{,}803 \pm 0{,}000$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+Źródło: opracowanie własne.

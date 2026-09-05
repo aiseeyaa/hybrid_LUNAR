@@ -1,0 +1,26 @@
+\begin{table}[H]
+\centering
+\caption{Porównanie wariantów fuzji zachowujących ciągły wynik anomalii dla zbioru UNSW-NB15. Dla każdego numeru runu wartości podano jako średnia $\pm$ odchylenie standardowe między seedami $29$ i~$81$.}
+\label{tab:fusion-continuous-unsw}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccccc}
+\hline
+Wariant & Run & ROC AUC & PR AUC & Precision & Recall & F1 \\
+\hline
+LR(X) & 1 & $0{,}946 \pm 0{,}000$ & $0{,}961 \pm 0{,}000$ & $0{,}815 \pm 0{,}006$ & $0{,}905 \pm 0{,}005$ & $0{,}858 \pm 0{,}001$ \\
+LR(X) & 2 & $0{,}946 \pm 0{,}000$ & $0{,}961 \pm 0{,}000$ & $0{,}815 \pm 0{,}006$ & $0{,}905 \pm 0{,}005$ & $0{,}858 \pm 0{,}001$ \\
+LR(X) & 3 & $0{,}946 \pm 0{,}000$ & $0{,}961 \pm 0{,}000$ & $0{,}815 \pm 0{,}006$ & $0{,}905 \pm 0{,}005$ & $0{,}858 \pm 0{,}001$ \\
+LR(X + LUNAR) & 1 & $0{,}952 \pm 0{,}006$ & $0{,}964 \pm 0{,}003$ & $0{,}814 \pm 0{,}002$ & $0{,}926 \pm 0{,}022$ & $0{,}866 \pm 0{,}011$ \\
+LR(X + LUNAR) & 2 & $0{,}948 \pm 0{,}002$ & $0{,}962 \pm 0{,}001$ & $0{,}812 \pm 0{,}002$ & $0{,}911 \pm 0{,}001$ & $0{,}859 \pm 0{,}002$ \\
+LR(X + LUNAR) & 3 & $0{,}954 \pm 0{,}001$ & $0{,}966 \pm 0{,}000$ & $0{,}816 \pm 0{,}007$ & $0{,}931 \pm 0{,}017$ & $0{,}870 \pm 0{,}004$ \\
+LR(X + LUNAR + baseline) & 1 & $0{,}951 \pm 0{,}007$ & $0{,}964 \pm 0{,}004$ & $0{,}815 \pm 0{,}002$ & $0{,}925 \pm 0{,}023$ & $0{,}866 \pm 0{,}011$ \\
+LR(X + LUNAR + baseline) & 2 & $0{,}948 \pm 0{,}001$ & $0{,}962 \pm 0{,}001$ & $0{,}808 \pm 0{,}002$ & $0{,}915 \pm 0{,}004$ & $0{,}858 \pm 0{,}001$ \\
+LR(X + LUNAR + baseline) & 3 & $0{,}954 \pm 0{,}001$ & $0{,}966 \pm 0{,}000$ & $0{,}817 \pm 0{,}008$ & $0{,}930 \pm 0{,}018$ & $0{,}870 \pm 0{,}003$ \\
+Fuzja wyników & 1 & $0{,}897 \pm 0{,}003$ & $0{,}931 \pm 0{,}001$ & $0{,}893 \pm 0{,}035$ & $0{,}763 \pm 0{,}025$ & $0{,}822 \pm 0{,}000$ \\
+Fuzja wyników & 2 & $0{,}904 \pm 0{,}000$ & $0{,}935 \pm 0{,}000$ & $0{,}799 \pm 0{,}000$ & $0{,}837 \pm 0{,}003$ & $0{,}817 \pm 0{,}001$ \\
+Fuzja wyników & 3 & $0{,}906 \pm 0{,}003$ & $0{,}935 \pm 0{,}001$ & $0{,}785 \pm 0{,}000$ & $0{,}850 \pm 0{,}005$ & $0{,}816 \pm 0{,}002$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+Źródło: opracowanie własne.

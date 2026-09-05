@@ -1,0 +1,26 @@
+\begin{table}[H]
+\centering
+\caption{Porównanie zespołu klasycznego z~modelami pojedynczymi dla zbioru CICIDS2017 przy standardowym progu decyzyjnym. Dla każdego numeru runu wartości podano jako średnia $\pm$ odchylenie standardowe między seedami $29$ i~$81$.}
+\label{tab:classical-ensemble-cicids}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccccc}
+\hline
+Model & Run & AUC_ROC & AUC_PR & Precision & Recall & F1 \\
+\hline
+Isolation Forest & 1 & $0{,}818 \pm 0{,}016$ & $0{,}606 \pm 0{,}012$ & $0{,}653 \pm 0{,}244$ & $0{,}565 \pm 0{,}183$ & $0{,}569 \pm 0{,}002$ \\
+Isolation Forest & 2 & $0{,}811 \pm 0{,}001$ & $0{,}601 \pm 0{,}006$ & $0{,}833 \pm 0{,}009$ & $0{,}413 \pm 0{,}028$ & $0{,}551 \pm 0{,}023$ \\
+Isolation Forest & 3 & $0{,}817 \pm 0{,}000$ & $0{,}609 \pm 0{,}005$ & $0{,}629 \pm 0{,}264$ & $0{,}589 \pm 0{,}246$ & $0{,}556 \pm 0{,}007$ \\
+LOF & 1 & $0{,}791 \pm 0{,}094$ & $0{,}480 \pm 0{,}135$ & $0{,}541 \pm 0{,}063$ & $0{,}714 \pm 0{,}185$ & $0{,}614 \pm 0{,}110$ \\
+LOF & 2 & $0{,}788 \pm 0{,}081$ & $0{,}474 \pm 0{,}113$ & $0{,}549 \pm 0{,}053$ & $0{,}666 \pm 0{,}070$ & $0{,}602 \pm 0{,}060$ \\
+LOF & 3 & $0{,}826 \pm 0{,}023$ & $0{,}477 \pm 0{,}032$ & $0{,}562 \pm 0{,}021$ & $0{,}730 \pm 0{,}013$ & $0{,}635 \pm 0{,}018$ \\
+One-Class SVM & 1 & $0{,}768 \pm 0{,}000$ & $0{,}621 \pm 0{,}002$ & $0{,}335 \pm 0{,}129$ & $0{,}886 \pm 0{,}161$ & $0{,}470 \pm 0{,}112$ \\
+One-Class SVM & 2 & $0{,}768 \pm 0{,}000$ & $0{,}621 \pm 0{,}002$ & $0{,}333 \pm 0{,}126$ & $0{,}887 \pm 0{,}160$ & $0{,}469 \pm 0{,}109$ \\
+One-Class SVM & 3 & $0{,}767 \pm 0{,}000$ & $0{,}621 \pm 0{,}002$ & $0{,}331 \pm 0{,}125$ & $0{,}886 \pm 0{,}161$ & $0{,}468 \pm 0{,}108$ \\
+Zespół klasyczny & 1 & $0{,}850 \pm 0{,}048$ & $0{,}687 \pm 0{,}074$ & $0{,}685 \pm 0{,}038$ & $0{,}625 \pm 0{,}162$ & $0{,}650 \pm 0{,}107$ \\
+Zespół klasyczny & 2 & $0{,}848 \pm 0{,}046$ & $0{,}690 \pm 0{,}066$ & $0{,}585 \pm 0{,}205$ & $0{,}762 \pm 0{,}073$ & $0{,}645 \pm 0{,}105$ \\
+Zespół klasyczny & 3 & $0{,}866 \pm 0{,}020$ & $0{,}695 \pm 0{,}025$ & $0{,}582 \pm 0{,}151$ & $0{,}822 \pm 0{,}092$ & $0{,}670 \pm 0{,}072$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+Źródło: opracowanie własne.
