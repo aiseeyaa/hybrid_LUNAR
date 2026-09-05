@@ -1,0 +1,21 @@
+\begin{table}[H]
+\centering
+\caption{LUNAR solo vs zespól bez LUNAR vs zespól z LUNAR (oba seedy: 29, 81).}
+\label{tab:ensemble_final}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccccccc}
+\hline
+Zbiór & Wariant & AUC_ROC & AUC_PR & Precision & Recall & F1 & runtime_train & runtime_inference \\
+\hline
+CICIDS 2017 & LUNAR & $0{,}866 \pm 0{,}008$ & $0{,}732 \pm 0{,}016$ & $0{,}651 \pm 0{,}039$ & $0{,}696 \pm 0{,}011$ & $0{,}672 \pm 0{,}018$ & $203{,}8 \pm 76{,}4$ & $9{,}5 \pm 1{,}6$ \\
+CICIDS 2017 & Zespól klasyczny & $0{,}855 \pm 0{,}033$ & $0{,}691 \pm 0{,}046$ & $0{,}617 \pm 0{,}126$ & $0{,}736 \pm 0{,}127$ & $0{,}655 \pm 0{,}075$ & $10{,}7 \pm 4{,}5$ & $19{,}2 \pm 10{,}0$ \\
+CICIDS 2017 & Zespól z LUNAR & $0{,}869 \pm 0{,}022$ & $0{,}720 \pm 0{,}034$ & $0{,}605 \pm 0{,}078$ & $0{,}749 \pm 0{,}092$ & $0{,}663 \pm 0{,}048$ & $219{,}0 \pm 78{,}9$ & $28{,}3 \pm 10{,}6$ \\
+\hline
+UNSW-NB15 & LUNAR & $0{,}888 \pm 0{,}012$ & $0{,}928 \pm 0{,}007$ & $0{,}858 \pm 0{,}095$ & $0{,}812 \pm 0{,}059$ & $0{,}829 \pm 0{,}025$ & $381{,}6 \pm 191{,}0$ & $13{,}2 \pm 1{,}7$ \\
+UNSW-NB15 & Zespól klasyczny & $0{,}874 \pm 0{,}002$ & $0{,}910 \pm 0{,}001$ & $0{,}830 \pm 0{,}011$ & $0{,}781 \pm 0{,}010$ & $0{,}805 \pm 0{,}003$ & $108{,}1 \pm 8{,}8$ & $140{,}3 \pm 9{,}0$ \\
+UNSW-NB15 & Zespól z LUNAR & $0{,}890 \pm 0{,}005$ & $0{,}924 \pm 0{,}002$ & $0{,}811 \pm 0{,}012$ & $0{,}829 \pm 0{,}018$ & $0{,}819 \pm 0{,}003$ & $500{,}6 \pm 189{,}7$ & $158{,}2 \pm 11{,}7$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+Zrodlo: opracowanie wlasne.

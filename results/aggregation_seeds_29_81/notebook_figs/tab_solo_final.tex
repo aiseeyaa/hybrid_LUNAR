@@ -1,0 +1,23 @@
+\begin{table}[H]
+\centering
+\caption{Wyniki modeli pojedynczych przy progu standardowym (średnia ± odchylenie standardowe, oba seedy: 29, 81).}
+\label{tab:solo_final}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{llccccc}
+\hline
+Zbiór & Model & AUC_ROC & AUC_PR & Precision & Recall & F1 \\
+\hline
+CICIDS 2017 & Isolation Forest & $0{,}815 \pm 0{,}008$ & $0{,}605 \pm 0{,}007$ & $0{,}705 \pm 0{,}189$ & $0{,}522 \pm 0{,}162$ & $0{,}559 \pm 0{,}014$ \\
+CICIDS 2017 & LOF & $0{,}802 \pm 0{,}059$ & $0{,}477 \pm 0{,}080$ & $0{,}551 \pm 0{,}039$ & $0{,}703 \pm 0{,}094$ & $0{,}617 \pm 0{,}059$ \\
+CICIDS 2017 & One-Class SVM & $0{,}768 \pm 0{,}000$ & $0{,}621 \pm 0{,}001$ & $0{,}333 \pm 0{,}098$ & $0{,}886 \pm 0{,}125$ & $0{,}469 \pm 0{,}085$ \\
+CICIDS 2017 & LUNAR & $0{,}866 \pm 0{,}008$ & $0{,}732 \pm 0{,}016$ & $0{,}651 \pm 0{,}039$ & $0{,}696 \pm 0{,}011$ & $0{,}672 \pm 0{,}018$ \\
+\hline
+UNSW-NB15 & Isolation Forest & $0{,}843 \pm 0{,}006$ & $0{,}885 \pm 0{,}006$ & $0{,}783 \pm 0{,}008$ & $0{,}804 \pm 0{,}017$ & $0{,}793 \pm 0{,}006$ \\
+UNSW-NB15 & LOF & $0{,}889 \pm 0{,}003$ & $0{,}922 \pm 0{,}003$ & $0{,}844 \pm 0{,}015$ & $0{,}809 \pm 0{,}013$ & $0{,}826 \pm 0{,}001$ \\
+UNSW-NB15 & One-Class SVM & $0{,}818 \pm 0{,}002$ & $0{,}851 \pm 0{,}003$ & $0{,}809 \pm 0{,}018$ & $0{,}763 \pm 0{,}013$ & $0{,}785 \pm 0{,}001$ \\
+UNSW-NB15 & LUNAR & $0{,}888 \pm 0{,}012$ & $0{,}928 \pm 0{,}007$ & $0{,}858 \pm 0{,}095$ & $0{,}812 \pm 0{,}059$ & $0{,}829 \pm 0{,}025$ \\
+\hline
+\end{tabular}}
+\end{table}
+
+Zrodlo: opracowanie wlasne.
